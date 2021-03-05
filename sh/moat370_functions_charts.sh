@@ -110,13 +110,14 @@ fc_proc_line_chart ()
                       substr($0,19,2)")" \
                       substr($0,22)}' "${csv_spool_filename}.3" > "${csv_spool_filename}.2"
 
-  (echo "${l_line}]" && cat "${csv_spool_filename}.2") > "${csv_spool_filename}.3"
+  (echo "${l_line}" && cat "${csv_spool_filename}.2") > "${csv_spool_filename}.3"
+
   fc_csv_to_gchart_vector ',' "${csv_spool_filename}.3" > "${csv_spool_filename}.2"
 
   cat "${csv_spool_filename}.2" >> "${one_spool_fullpath_filename}"
 
   rm -f "${csv_spool_filename}.2" "${csv_spool_filename}.3"
-
+ 
   ## chart footer
   echo "        ]);" >> "${one_spool_fullpath_filename}"
   echo "        " >> "${one_spool_fullpath_filename}"
