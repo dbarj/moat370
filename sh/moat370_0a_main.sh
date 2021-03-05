@@ -138,6 +138,15 @@ then
   fc_db_run_file "${moat370_sw_folder}/sql/${moat370_sw_name}_0b_post.sql"
 fi
 
+if [ -f "${moat370_sw_folder}/sh/${moat370_sw_name}_0b_post.sh" ]
+then
+  fc_echo_screen_log ""
+  fc_echo_screen_log division
+  fc_echo_screen_log ""
+  fc_echo_screen_log "Running ${moat370_sw_name}_0b_post.sh"
+  source "${moat370_sw_folder}/sh/${moat370_sw_name}_0b_post.sh"
+fi
+
 source "${v_this_dir}"/moat370_0c_post.sh
 
 fc_encrypt_output "${moat370_zip_filename}.zip"
@@ -145,6 +154,8 @@ fc_encrypt_output "${moat370_zip_filename}.zip"
 if [ -f "${moat370_zip_filename}.zip" ]
 then
   # Not using fc_echo_screen_log as log file is already zipped
+  echo ""
+  echo '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
   echo ""
   unzip -l "${moat370_zip_filename}"
 fi

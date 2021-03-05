@@ -335,9 +335,9 @@ fc_load_db_functions
 fc_db_startup_connection
 [ "${moat370_sw_db_type}" != "offline" ] && echo_time "Starting ${moat370_sw_db_type} in background. Connecting..."
 fc_db_check_connection
-echo_time "Connected."
+[ "${moat370_sw_db_type}" != "offline" ] && echo_time "Connected."
 fc_db_begin_code
-echo_time "Loaded database startup code."
+[ "${moat370_sw_db_type}" != "offline" ] && echo_time "Loaded database startup code."
 fc_check_database_variables
 
 ## get database name (up to 10, stop before first '.', no special characters)

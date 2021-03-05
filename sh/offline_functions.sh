@@ -34,6 +34,7 @@
 # fc_db_table_description
 # fc_db_check_file_sql_error
 # fc_db_enable_trace
+# fc_db_pre_exec_call
 
 fc_db_startup_connection ()
 {
@@ -105,7 +106,7 @@ fc_db_enable_trace ()
   true
 }
 
-fc_db_pre_exec ()
+fc_db_pre_exec_call ()
 {
   true
 }

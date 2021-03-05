@@ -375,7 +375,6 @@ fc_reset_defaults ()
   skip_graph="${moat370_def_skip_graph}"
   skip_map="${moat370_def_skip_map}"
   skip_treemap="${moat370_def_skip_treemap}"
-  skip_html_spool="--"
   skip_text="--"
   skip_html="--"
   output_type=''

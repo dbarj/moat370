@@ -55,7 +55,11 @@ fc_exec_item ()
   local input_csv_mode=false
   local input_raw_mode=false
 
+  ################################################
+  ################################################
+
   ## Check Output Options
+
   local moat370_output_valid_opts='|table|csv|line|pie|bar|graph|map|treemap|text|html|'
   local output_item
 
@@ -67,20 +71,18 @@ fc_exec_item ()
     done
   fi
 
-  output_item="${output_item} table"
-
   for output_item in $output_type
   do
     if [ $(instr_var "${moat370_output_valid_opts}" "|${output_item}|") -eq 0 ]
     then
-      fc_reset_defaults
       fc_echo_screen_log ""
-      fc_echo_screen_log "Invalid output option. Valid options are: ${moat370_output_valid_opts}". 
+      fc_echo_screen_log "Invalid output option \"${output_item}\". Valid options are: $(tr '|' ' ' <<< "${moat370_output_valid_opts}")".
+      fc_reset_defaults
       return
     fi
     eval skip_${output_item}=''
   done
-  
+
   if [ -z "${skip_text}" -o \
        -z "${skip_html}" ]
   then
@@ -99,31 +101,57 @@ fc_exec_item ()
     input_csv_mode=true
   fi
 
+  ## Validate input parameters
+
   if ${input_csv_mode} && ${input_raw_mode}
   then
-    fc_reset_defaults
     fc_echo_screen_log ""
-    fc_echo_screen_log "Invalid output option combination: ${output_type}". 
+    fc_echo_screen_log "Invalid output option combination: ${output_type}".
+    fc_reset_defaults
     return
   fi
 
-  if [ -z "${sql_text}" -a -z "${input_file}" ]
+  if [ -z "${sql_text}" -a \
+       -z "${input_file}" ]
   then
-    fc_reset_defaults
     fc_echo_screen_log ""
-    fc_echo_screen_log "Missing sql_text or input_file variables before calling fc_exec_item.". 
+    fc_echo_screen_log "Missing sql_text or input_file variables before calling fc_exec_item.".
+    fc_reset_defaults
     return
   fi
 
-  if [ -n "${sql_text}" -a "${moat370_sw_db_type}" = "offline" ]
+  if [ -n "${sql_text}" -a \
+       -n "${input_file}" ]
   then
-    fc_reset_defaults
     fc_echo_screen_log ""
-    fc_echo_screen_log "Skipping sql_text item as moat370_sw_db_type is \"offline\".". 
+    fc_echo_screen_log "sql_text and input_file both are defined. Please correct.".
+    fc_reset_defaults
     return
   fi
 
-  ############
+  if [ -n "${sql_text}" -a \
+      "${moat370_sw_db_type}" = "offline" ]
+  then
+    fc_echo_screen_log ""
+    fc_echo_screen_log "Skipping sql_text item as moat370_sw_db_type is \"offline\".".
+    fc_reset_defaults
+    return
+  fi
+
+  if [ -z "${skip_text}" -a \
+       -z "${skip_html}" ]
+  then
+    fc_echo_screen_log ""
+    fc_echo_screen_log "Output can't be html and text at the same time.".
+    fc_reset_defaults
+    return
+  fi
+
+  ################################################
+  ################################################
+
+  # Run any database specific function before each topic.
+  fc_db_pre_exec_call
 
   fc_clean_file_name "title" "title_no_spaces"
   spool_filename="${report_sequence}_${title_no_spaces}"
@@ -137,14 +165,13 @@ fc_exec_item ()
   fc_echo_screen_log "${hh_mm_ss} ${title}${title_suffix}"
   fc_echo_screen_log ""
 
-  fc_db_pre_exec
-
   # Remove both leading and trailing blank lines
   # http://sed.sourceforge.net/sed1line.txt / https://stackoverflow.com/questions/7359527/removing-trailing-starting-newlines-with-sed-awk-tr-and-friends
   sql_text=$($cmd_sed -e :a -e '/./,$!d;/^\n*$/{$d;N;};/\n$/ba' <<< "${sql_text}")
 
-  ## When sql_show is NO, will print sql_text_display only if variable sql_text_display is forcelly specified.
   [ -z "${sql_text}" ] && sql_show='N'
+
+  ## When sql_show is NO, will print sql_text_display only if variable sql_text_display is forcelly specified.
   if [ "${sql_show}" = 'Y' ]
   then
     if [ -n "${sql_with_clause}" ]
@@ -214,7 +241,7 @@ fc_exec_item ()
       fc_echo_screen_log "${row_num} rows selected."
     elif ${input_raw_mode}
     then
-      fc_def_output_file raw_spool_filename "${spool_filename}.raw"
+      fc_def_output_file raw_spool_filename "${spool_filename}.txt"
       fc_db_create_raw "${moat370_query}" "${raw_spool_filename}"
       if [ -f "${raw_spool_filename}" ] && \
       fc_db_check_file_sql_error "${raw_spool_filename}"
@@ -254,18 +281,16 @@ fc_exec_item ()
   fc_echo_screen_log "${hh_mm_ss} ${section_id}.${report_sequence}"
 
   ## execute one sql
-  [ -z "${skip_table}${moat370_skip_table}" ]       && fc_proc_one_table
-  #[ -z "${skip_text}${moat370_skip_text}" ]         && fc_proc_one_text
-  [ -z "${skip_csv}${moat370_skip_csv}" ]           && fc_proc_one_csv
-  [ -z "${skip_line}${moat370_skip_line}" ]         && fc_proc_line_chart
-  [ -z "${skip_pie}${moat370_skip_pie}" ]           && fc_proc_pie_chart
-  [ -z "${skip_bar}${moat370_skip_bar}" ]           && fc_proc_bar_chart
-  [ -z "${skip_graph}${moat370_skip_graph}" ]       && fc_proc_graphviz_chart
-  [ -z "${skip_map}${moat370_skip_map}" ]           && fc_proc_map_chart
-  [ -z "${skip_treemap}${moat370_skip_treemap}" ]   && fc_proc_treemap_chart
-  #[ -z "${skip_html_spool}${moat370_skip_table}" ]  && fc_proc_one_html_spool
-  [ -z "${skip_text}${moat370_skip_file}" ]         && fc_proc_one_text_file
-  [ -z "${skip_html}${moat370_skip_table}" ]        && fc_proc_one_html_file
+  [ -z "${skip_table}${moat370_skip_table}" ]     && fc_proc_one_table
+  [ -z "${skip_csv}${moat370_skip_csv}" ]         && fc_proc_one_csv
+  [ -z "${skip_line}${moat370_skip_line}" ]       && fc_proc_line_chart
+  [ -z "${skip_pie}${moat370_skip_pie}" ]         && fc_proc_pie_chart
+  [ -z "${skip_bar}${moat370_skip_bar}" ]         && fc_proc_bar_chart
+  [ -z "${skip_graph}${moat370_skip_graph}" ]     && fc_proc_graphviz_chart
+  [ -z "${skip_map}${moat370_skip_map}" ]         && fc_proc_map_chart
+  [ -z "${skip_treemap}${moat370_skip_treemap}" ] && fc_proc_treemap_chart
+  [ -z "${skip_text}${moat370_skip_file}" ]       && fc_proc_one_text_file
+  [ -z "${skip_html}${moat370_skip_file}" ]       && fc_proc_one_html_file
 
   ## Check D3 Graphs
   local moat370_d3_graph_valid_opts='|circle_packing|'
@@ -291,13 +316,13 @@ fc_exec_item ()
   fc_zip_file "${moat370_zip_filename}" "${moat370_log3}" false
 
   ## update main report
-  echo "<small><em> (${row_num})</em></small>" >> "${moat370_main_report}"
+  [ "${row_num}" != '?' ] && echo "<small><em> (${row_num})</em></small>" >> "${moat370_main_report}"
   echo "</li>" >> "${moat370_main_report}"
 
   fc_zip_file "${moat370_zip_filename}" "${moat370_main_report}" false
 
   ## cleanup
-  rm -f "${moat370_query}"
+  [ -f "${moat370_query}" ] && rm -f "${moat370_query}"
   [ -n "${csv_spool_filename}" ] && rm -f "${csv_spool_filename}"
   fc_reset_defaults
 
@@ -393,18 +418,19 @@ fc_proc_one_text_file ()
   local one_spool_filename
   local one_spool_fullpath_filename
 
-  [ ! -f "${raw_spool_filename}" ] && echo_error "Can't run fc_proc_one_text_file with provided inputs." && return
+  [ -z "${raw_spool_filename}" ] && echo_error "Can't run fc_proc_one_text_file with provided inputs." && return
 
   ## Check mandatory variables
   local one_spool_text_file="${raw_spool_filename}"
   fc_def_empty_var one_spool_text_file_type
   fc_def_empty_var one_spool_text_file_rename
 
-  # ## add seq to one_spool_filename
-  # [ "${one_spool_text_file_rename}" = 'Y' ] && file_seq=$((file_seq+1))
+  [ -n "${sql_text}" ] && one_spool_text_file_rename='Y' # Force rename if output comes from a SQL.
+
+  [ "${one_spool_text_file_rename}" = 'Y' -a ! -f "${raw_spool_filename}" ] && echo_error "Can't run fc_proc_one_text_file with provided inputs." && return
 
   fc_set_value_var_nvl one_spool_text_file_type "${one_spool_text_file_type}" 'text'
-  
+
   fc_clean_file_name one_spool_text_file one_spool_filename PATH
   fc_def_output_file one_spool_fullpath_filename "${one_spool_filename}"
 
@@ -438,12 +464,14 @@ fc_proc_one_text_file ()
 
   unset one_spool_text_file_chk
 
-  if [ -f "${one_spool_fullpath_filename}" ]
-  then
-    row_num=$(cat "${one_spool_fullpath_filename}" | wc -l | tr -d '[:space:]')
-  else
-    row_num='?'
-  fi
+  # Disable rownum if one_spool_text_file_rename = N as target file may not be accessible.
+  [ "${one_spool_text_file_rename}" = 'N' ] && row_num='?'
+  #if [ -f "${one_spool_fullpath_filename}" ]
+  #then
+  #  row_num=$(cat "${one_spool_fullpath_filename}" | wc -l | tr -d '[:space:]')
+  #else
+  #  row_num='?'
+  #fi
 
   if [ "${one_spool_text_file_rename}" = 'Y' ]
   then

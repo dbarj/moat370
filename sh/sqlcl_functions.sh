@@ -34,6 +34,7 @@
 # fc_db_table_description
 # fc_db_check_file_sql_error
 # fc_db_enable_trace
+# fc_db_pre_exec_call
 
 # printf %s\\n "$-"
 bin_check sql
@@ -195,7 +196,7 @@ fc_db_enable_trace ()
   fc_run_query "ALTER SESSION SET EVENTS '10046 TRACE NAME CONTEXT FOREVER, LEVEL ${sql_trace_level}';"
 }
 
-fc_db_pre_exec ()
+fc_db_pre_exec_call ()
 {
   ## Check if we will use sql_text or sql_text_cdb
   if [ -n "${sql_text_cdb}" -a "${is_cdb}" = 'Y' ]
