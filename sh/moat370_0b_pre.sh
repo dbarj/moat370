@@ -371,6 +371,7 @@ title_suffix=''
 ## timestamp on filename
 moat370_file_time=$(get_date_time)
 
+[ "${moat370_sw_db_type}" = "offline" ] && moat370_sw_dbtool='N'
 fc_set_value_var_decode common_moat370_prefix "${moat370_sw_dbtool}" 'Y' "${moat370_prefix}_${database_name_short}" "${moat370_prefix}"
 
 section_id=''
