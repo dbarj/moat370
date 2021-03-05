@@ -452,7 +452,7 @@ fc_load_column ()
 
     if [ -z ${v_skip} ]
     then
-      fc_call_secion "${v_csv_1}" "${moat370_sw_name}_${v_csv_1}_${v_csv_2}" "${v_csv_3}"
+      fc_call_section "${v_csv_1}" "${moat370_sw_name}_${v_csv_1}_${v_csv_2}" "${v_csv_3}"
     fi
   done
 
@@ -650,7 +650,7 @@ fc_encrypt_file ()
   unset in_param in_param_content out_enc_file
 }
 
-fc_call_secion ()
+fc_call_section ()
 {
   ## This code will call a section and print it.
   ## Param 1 = Section ID 
@@ -672,7 +672,10 @@ fc_call_secion ()
 
   [ ! -f "${v_file}" ] && exit_error "File \"${v_file}\" does not exist. Fix 00_sections.csv."
 
-  echo "<h2>${section_id}. ${section_name}</h2>" >> "${moat370_main_report}"
+  ## The variable below will be changed to YES if the code ever enter in 9a
+  moat370_section_print='NO'
+
+  echo "<h2 class=\"i${section_id}\">${section_id}. ${section_name}</h2>" >> "${moat370_main_report}"
   echo "<ol start=\"${report_sequence}\">" >> "${moat370_main_report}"
 
   ## Reset section related DEFs
@@ -694,6 +697,17 @@ fc_call_secion ()
   rm "${section_fifo}"
 
   echo "</ol>" >> "${moat370_main_report}"
+
+  unzip "${moat370_zip_filename}" "${moat370_style_css}" -d "${moat370_sw_output_fdr}" >> "${moat370_log3}"
+  if [ "${moat370_section_print}" = "NO" ]
+  then
+    echo "h2.i${section_id}            {display:none;}" >> "${moat370_sw_output_fdr}/${moat370_style_css}"
+  elif [ "${moat370_section_print}" = "YES" ]
+  then
+    echo "h2.i${section_id}            {}" >> "${moat370_sw_output_fdr}/${moat370_style_css}"
+  fi
+
+  fc_zip_file "${moat370_zip_filename}" "${moat370_sw_output_fdr}/${moat370_style_css}"
 
   unset section_id section_name section_fifo
   unset moat370_sec_id moat370_sec_fl moat370_sec_nm

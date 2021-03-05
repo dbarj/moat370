@@ -328,6 +328,7 @@ fc_exec_item ()
 
   ##
   moat370_column_print='YES'
+  moat370_section_print='YES'
 
   ## report sequence
   report_sequence=$((report_sequence+1))
@@ -345,7 +346,7 @@ fc_proc_one_table ()
   fc_def_output_file one_spool_fullpath_filename "${one_spool_filename}.html"
   rm -f "${one_spool_fullpath_filename}"
 
-  fc_html_topic_intro "${one_spool_filename}.html" html
+  fc_html_topic_intro "${one_spool_filename}.html" table
 
   fc_csv_to_html_table "${csv_spool_filename}" "${one_spool_fullpath_filename}"
 
@@ -357,7 +358,7 @@ fc_proc_one_table ()
   [ -n "${foot}" ] && echo "1) ${foot}" >> "${one_spool_fullpath_filename}"
   [ -n "${foot}" ] && echo '</font>' >> "${one_spool_fullpath_filename}"
 
-  fc_html_topic_end "${one_spool_fullpath_filename}" html '' "${sql_show}"
+  fc_html_topic_end "${one_spool_fullpath_filename}" table '' "${sql_show}"
 
   fc_encode_html "${one_spool_fullpath_filename}"
 
