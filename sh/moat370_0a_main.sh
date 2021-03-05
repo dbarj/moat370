@@ -112,7 +112,7 @@ do
   fc_load_column "${v_i}"
   if [ ${v_i} -lt ${moat370_total_cols} ]
   then
-    echo "</td><td class=\"i`expr ${v_i} + 1`\">'" >> "${moat370_main_report}"
+    echo "</td><td class=\"i`expr ${v_i} + 1`\">" >> "${moat370_main_report}"
   else
     echo '</td>' >> "${moat370_main_report}"
   fi
