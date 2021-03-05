@@ -333,7 +333,7 @@ fi
 declare v_db_client_pid
 fc_load_db_functions
 fc_db_startup_connection
-echo_time "Starting ${moat370_sw_db_type} in background. Connecting..."
+[ "${moat370_sw_db_type}" != "offline" ] && echo_time "Starting ${moat370_sw_db_type} in background. Connecting..."
 fc_db_check_connection
 echo_time "Connected."
 fc_db_begin_code

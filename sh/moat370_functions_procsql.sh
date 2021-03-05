@@ -73,7 +73,9 @@ fc_exec_item ()
   do
     if [ $(instr_var "${moat370_output_valid_opts}" "|${output_item}|") -eq 0 ]
     then
-      echo_error "Invalid output option. Valid options are: ${moat370_output_valid_opts}". 
+      fc_reset_defaults
+      fc_echo_screen_log ""
+      fc_echo_screen_log "Invalid output option. Valid options are: ${moat370_output_valid_opts}". 
       return
     fi
     eval skip_${output_item}=''
@@ -99,16 +101,29 @@ fc_exec_item ()
 
   if ${input_csv_mode} && ${input_raw_mode}
   then
-    echo_error "Invalid output option combination: ${output_type}". 
+    fc_reset_defaults
+    fc_echo_screen_log ""
+    fc_echo_screen_log "Invalid output option combination: ${output_type}". 
     return
   fi
 
   if [ -z "${sql_text}" -a -z "${input_file}" ]
   then
-    echo_error "Missing sql_text or input_file variables before calling fc_exec_item.". 
+    fc_reset_defaults
+    fc_echo_screen_log ""
+    fc_echo_screen_log "Missing sql_text or input_file variables before calling fc_exec_item.". 
     return
   fi
-  ####
+
+  if [ -n "${sql_text}" -a "${moat370_sw_db_type}" = "offline" ]
+  then
+    fc_reset_defaults
+    fc_echo_screen_log ""
+    fc_echo_screen_log "Skipping sql_text item as moat370_sw_db_type is \"offline\".". 
+    return
+  fi
+
+  ############
 
   fc_clean_file_name "title" "title_no_spaces"
   spool_filename="${report_sequence}_${title_no_spaces}"

@@ -53,6 +53,15 @@ fc_db_define_module
 
 fc_reset_defaults
 
+if [ -f "${moat370_sw_folder}/sh/${moat370_sw_name}_0a_pre.sh" ]
+then
+  fc_echo_screen_log ""
+  fc_echo_screen_log division
+  fc_echo_screen_log ""
+  fc_echo_screen_log "Running ${moat370_sw_name}_0a_pre.sh"
+  source "${moat370_sw_folder}/sh/${moat370_sw_name}_0a_pre.sh"
+fi
+
 if [ -f "${moat370_sw_folder}/sql/${moat370_sw_name}_0a_pre.sql" ]
 then
   fc_echo_screen_log ""
