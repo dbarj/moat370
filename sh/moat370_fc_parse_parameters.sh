@@ -97,6 +97,8 @@ then
   exit_error ${v_msg}
 fi
 
+unset v_msg
+
 fc_def_empty_var moat370_param1
 fc_def_empty_var moat370_param2
 fc_def_empty_var moat370_param3

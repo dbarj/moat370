@@ -39,7 +39,7 @@ fc_def_empty_var moat370_sw_cert_file
 fc_def_empty_var moat370_sw_title_desc
 fc_def_empty_var moat370_sw_url
 fc_def_empty_var moat370_sw_rpt_cols
-fc_def_empty_var moat370_sw_misc_fdr
+fc_def_empty_var moat370_sw_logo_fdr
 fc_def_empty_var moat370_sw_logo_title_1
 fc_def_empty_var moat370_sw_logo_title_2
 fc_def_empty_var moat370_sw_logo_title_3
@@ -58,7 +58,7 @@ fc_def_empty_var moat370_sw_enc_sql
 fc_def_empty_var moat370_sw_gchart_path
 fc_def_empty_var moat370_sw_db_type
 
-fc_set_value_var_nvl 'moat370_sw_misc_fdr'   "${moat370_sw_misc_fdr}" 'js'
+fc_set_value_var_nvl 'moat370_sw_logo_fdr'   "${moat370_sw_logo_fdr}" 'jpg'
 fc_set_value_var_nvl 'moat370_sw_rpt_cols'   "${moat370_sw_rpt_cols}" '7'
 
 fc_validate_variable moat370_sw_name       NOT_NULL
@@ -210,7 +210,7 @@ fc_def_empty_var moat370_conf_sql_format
 fc_def_empty_var moat370_conf_sql_highlight
 fc_def_empty_var moat370_conf_tablefilter
 
-fc_set_value_var_nvl 'moat370_conf_incl_trace'    "${moat370_conf_incl_trace}"   'N'
+fc_set_value_var_nvl 'moat370_conf_incl_trace'    "${moat370_conf_incl_trace}"    'N'
 fc_set_value_var_nvl 'moat370_conf_incl_opatch'   "${moat370_conf_incl_opatch}"   'N'
 fc_set_value_var_nvl 'moat370_conf_ask_license'   "${moat370_conf_ask_license}"   'N'
 fc_set_value_var_nvl 'moat370_conf_sql_format'    "${moat370_conf_sql_format}"    'N'

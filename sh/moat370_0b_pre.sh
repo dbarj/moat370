@@ -131,19 +131,22 @@ fi
 ## Final file will be only encrypted if defined by parameter
 if [ "${moat370_conf_encrypt_output}" = 'ON' ]
 then
-  fc_encrypt_output () { fc_encrypt_file; }
+  fc_encrypt_output_zip () { fc_encrypt_file_internal "$@"; }
+  moat370_conf_encrypt_html='OFF' # If output zip is already being encrypted, there is no reason to enable HTML encryption.
 else
-  fc_encrypt_output () { true; }
+  fc_encrypt_output_zip () { true; }
 fi
 
 ## Mid non-html files and files converted to html are encrypted based on html encryption
-if [ "${moat370_conf_encrypt_html}" != 'ON' ]
+if [ "${moat370_conf_encrypt_html}" = 'ON' ]
 then
+  fc_encrypt_file () { fc_encrypt_file_internal "$@"; }
+else
   fc_encrypt_file () { true; }
 fi
 
 ##
-if [ "${moat370_conf_encrypt_html}" != 'ON' ] && [ "${moat370_conf_compress_html}" != 'ON' ]
+if [ "${moat370_conf_encrypt_html}" = 'OFF' ] && [ "${moat370_conf_compress_html}" = 'OFF' ]
 then
   fc_convert_txt_to_html () { true; }
 fi
@@ -157,16 +160,27 @@ else
 fi
 
 fc_def_empty_var moat370_pre_enc_pub_file
-fc_set_value_var_nvl 'moat370_enc_pub_file' "${moat370_pre_enc_pub_file}" "${moat370_sw_folder}/${moat370_sw_misc_fdr}/${moat370_sw_cert_file}"
+fc_set_value_var_nvl 'moat370_enc_pub_file' "${moat370_pre_enc_pub_file}" "${moat370_sw_folder}/cfg/${moat370_sw_cert_file}"
 
 fc_def_empty_var moat370_pre_sw_key_file
 fc_def_output_file enc_key_file 'key.bin'
 fc_set_value_var_nvl 'enc_key_file' "${moat370_pre_sw_key_file}" "${enc_key_file}"
- 
-if [ "${moat370_conf_encrypt_html}" = 'ON' ] && [ ! -f "${moat370_enc_pub_file}" ]
+
+if [ "${moat370_conf_encrypt_html}" = 'ON' -o "${moat370_conf_encrypt_output}" = 'ON' ] \
+&& [ -z "${moat370_sw_cert_file}" ]
 then
-  echo_error "\"moat370_conf_encrypt_html\" is ON but no certification file found on \"${moat370_enc_pub_file}\"."
+  echo_error "\"moat370_conf_encrypt_html\" or \"moat370_conf_encrypt_output\" is ON but no certification file specified on \"moat370_sw_cert_file\". Encryption will be disabled."
+  moat370_conf_encrypt_html='OFF'
+  moat370_conf_encrypt_output='OFF'
 fi
+
+if [ "${moat370_conf_encrypt_html}" = 'ON' -o "${moat370_conf_encrypt_output}" = 'ON' ] \
+&& [ ! -f "${moat370_enc_pub_file}" ]
+then
+  echo_error "\"moat370_conf_encrypt_html\" or \"moat370_conf_encrypt_output\" is ON but no certification file found on \"${moat370_enc_pub_file}\". Encryption will be disabled."
+  moat370_conf_encrypt_html='OFF'
+  moat370_conf_encrypt_output='OFF'
+fi  
 
 if [ ! -f "${enc_key_file}" ] && [ "${moat370_conf_encrypt_html}" = 'ON' ]
 then
@@ -388,7 +402,7 @@ fc_def_output_file moat370_driver      'drivers.zip'
 
 fc_set_value_var_decode moat370_main_filename "${moat370_sw_dbtool}" 'Y' "${common_moat370_prefix}_${host_name_short}" "${common_moat370_prefix}"
 
-fc_def_output_file moat370_zip_filename "${moat370_main_filename}_${moat370_file_time}"
+fc_def_output_file moat370_zip_filename "${moat370_main_filename}_${moat370_file_time}.zip"
 moat370_tracefile_identifier="${common_moat370_prefix}"
 fc_def_output_file moat370_query '${common_moat370_prefix}_query.sql'
 
@@ -546,8 +560,8 @@ then
   fc_zip_file "${moat370_zip_filename}" "${moat370_fdr_js}/gunzip.js" false
 fi
 
-fc_zip_file "${moat370_zip_filename}" "${moat370_sw_folder}/${moat370_sw_misc_fdr}/${moat370_sw_logo_file}" false
-fc_zip_file "${moat370_zip_filename}" "${moat370_sw_folder}/${moat370_sw_misc_fdr}/${moat370_sw_icon_file}" false
+fc_zip_file "${moat370_zip_filename}" "${moat370_sw_folder}/${moat370_sw_logo_fdr}/${moat370_sw_logo_file}" false
+fc_zip_file "${moat370_zip_filename}" "${moat370_sw_folder}/${moat370_sw_logo_fdr}/${moat370_sw_icon_file}" false
 
 if [ "${moat370_conf_compress_html}" = 'ON' -o -f ${enc_key_file}.enc ]
 then

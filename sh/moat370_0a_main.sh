@@ -149,9 +149,9 @@ fi
 
 source "${v_this_dir}"/moat370_0c_post.sh
 
-fc_encrypt_output "${moat370_zip_filename}.zip"
+fc_encrypt_output_zip moat370_zip_filename
 
-if [ -f "${moat370_zip_filename}.zip" ]
+if grep -q '.zip$' <<< "${moat370_zip_filename}"
 then
   # Not using fc_echo_screen_log as log file is already zipped
   echo ""
@@ -160,6 +160,6 @@ then
   unzip -l "${moat370_zip_filename}"
 fi
 
-echo "End ${moat370_sw_name}. Output: ${moat370_zip_filename}.zip"
+echo "End ${moat370_sw_name}. Output: ${moat370_zip_filename}"
 
 ## END

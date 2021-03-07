@@ -647,7 +647,7 @@ fc_zip_file ()
   zip ${v_param} "${v_zip}" "${v_src}" >> "${moat370_log3}"
 }
 
-fc_encrypt_file ()
+fc_encrypt_file_internal ()
 {
   ## This code will check if parameter 1 has a valid file. If it does, it will encrypt the file and update the input parameter with the new name.
   local in_param in_param_content out_enc_file
@@ -655,9 +655,9 @@ fc_encrypt_file ()
 
   eval in_param_content=\$${in_param}
 
-  out_enc_file='${in_param_content}.enc'
+  out_enc_file="${in_param_content}.enc"
 
-  openssl smime -encrypt -binary -aes-256-cbc -in ${in_param_content} -out ${out_enc_file} -outform DER ${moat370_enc_pub_file}
+  openssl smime -encrypt -binary -aes-256-cbc -in "${in_param_content}" -out "${out_enc_file}" -outform DER "${moat370_enc_pub_file}"
   
   if [ -f "${out_enc_file}" ]
   then
