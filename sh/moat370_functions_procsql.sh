@@ -595,7 +595,6 @@ fc_html_topic_intro ()
   echo "<!--BEGIN_SENSITIVE_DATA-->" >> "${one_spool_fullpath_filename}"
   echo "<br>" >> "${one_spool_fullpath_filename}"
   [ -n "${abstract}" ] && echo "${abstract}" >> "${one_spool_fullpath_filename}"
-  [ -n "${abstract2}" ] && echo "${abstract2}" >> "${one_spool_fullpath_filename}"
   echo >> "${one_spool_fullpath_filename}"
 
   unset main_table_print

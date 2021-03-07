@@ -376,7 +376,6 @@ fc_reset_defaults ()
   row_num='-1'
   row_num_dif=0
   abstract=''
-  abstract2=''
   main_table=''
   foot=''
   max_rows="${moat370_def_sql_maxrows}"

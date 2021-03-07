@@ -91,17 +91,7 @@ done
 
 echo '</tr><tr class="main"><td>' >> "${moat370_main_report}"
 echo "<img src=\"${moat370_sw_logo_file}\" alt=\"${moat370_sw_name}\" height=\"228\" width=\"auto\"" >> "${moat370_main_report}"
-echo "title=\"${moat370_sw_logo_title_1}" >> "${moat370_main_report}"
-
-[ -n "${moat370_sw_logo_title_2}" ] && echo "${moat370_sw_logo_title_2}" >> "${moat370_main_report}" 
-[ -n "${moat370_sw_logo_title_3}" ] && echo "${moat370_sw_logo_title_3}" >> "${moat370_main_report}" 
-[ -n "${moat370_sw_logo_title_4}" ] && echo "${moat370_sw_logo_title_4}" >> "${moat370_main_report}" 
-[ -n "${moat370_sw_logo_title_5}" ] && echo "${moat370_sw_logo_title_5}" >> "${moat370_main_report}" 
-[ -n "${moat370_sw_logo_title_6}" ] && echo "${moat370_sw_logo_title_6}" >> "${moat370_main_report}" 
-[ -n "${moat370_sw_logo_title_7}" ] && echo "${moat370_sw_logo_title_7}" >> "${moat370_main_report}" 
-[ -n "${moat370_sw_logo_title_8}" ] && echo "${moat370_sw_logo_title_8}" >> "${moat370_main_report}"
-
-echo '">' >> "${moat370_main_report}"
+echo "title=\"${moat370_sw_logo_title}\">" >> "${moat370_main_report}"
 echo '<br>' >> "${moat370_main_report}"
 
 fc_def_output_file step_main_file_driver 'step_main_file_driver_columns.sql'
