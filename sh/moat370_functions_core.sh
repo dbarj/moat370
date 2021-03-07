@@ -48,7 +48,7 @@ save_bash_variables ()
   fc_def_empty_var moat370_sw_output_fdr
   if [ -n "${moat370_sw_output_fdr}" ] && \
      [ -w "${moat370_sw_output_fdr}" ] && \
-     fc_is_debug_enabled
+     $(fc_is_debug_enabled)
   then
     fc_def_output_file last_run_vars 'last_run_vars.env'
     ( set -o posix ; set ) > "${last_run_vars}"
