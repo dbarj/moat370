@@ -20,43 +20,43 @@
 ## Check for mandatory variables and put their default values if unset or stop the code.
 
 ## moat370_sw_output_fdr must be the first as it is used in fc_validate_variable -> step_file
-declare moat370_pre_sw_output_fdr
+fc_def_empty_var moat370_pre_sw_output_fdr
 fc_set_value_var_nvl 'moat370_sw_output_fdr' "${moat370_pre_sw_output_fdr}" '.'
 fc_exit_no_folder_perms
 
 ## DEBUG must be the second as it is used in fc_validate_variable -> fc_set_term_off
-declare DEBUG
+fc_def_empty_var DEBUG
 fc_set_value_var_nvl 'DEBUG'  "${DEBUG}"  'OFF'
 
 fc_validate_variable DEBUG ON_OFF
 
 ## Some software parameters are mandatory:
 
-declare moat370_sw_name
-declare moat370_sw_logo_file
-declare moat370_sw_icon_file
-declare moat370_sw_cert_file
-declare moat370_sw_title_desc
-declare moat370_sw_url
-declare moat370_sw_rpt_cols
-declare moat370_sw_misc_fdr
-declare moat370_sw_logo_title_1
-declare moat370_sw_logo_title_2
-declare moat370_sw_logo_title_3
-declare moat370_sw_logo_title_4
-declare moat370_sw_logo_title_5
-declare moat370_sw_logo_title_6
-declare moat370_sw_logo_title_7
-declare moat370_sw_logo_title_8
-declare moat370_sw_vYYNN
-declare moat370_sw_vrsn
-declare moat370_sw_copyright
-declare moat370_sw_author
-declare moat370_sw_email
-declare moat370_sw_dbtool
-declare moat370_sw_enc_sql
-declare moat370_sw_gchart_path
-declare moat370_sw_db_type
+fc_def_empty_var moat370_sw_name
+fc_def_empty_var moat370_sw_logo_file
+fc_def_empty_var moat370_sw_icon_file
+fc_def_empty_var moat370_sw_cert_file
+fc_def_empty_var moat370_sw_title_desc
+fc_def_empty_var moat370_sw_url
+fc_def_empty_var moat370_sw_rpt_cols
+fc_def_empty_var moat370_sw_misc_fdr
+fc_def_empty_var moat370_sw_logo_title_1
+fc_def_empty_var moat370_sw_logo_title_2
+fc_def_empty_var moat370_sw_logo_title_3
+fc_def_empty_var moat370_sw_logo_title_4
+fc_def_empty_var moat370_sw_logo_title_5
+fc_def_empty_var moat370_sw_logo_title_6
+fc_def_empty_var moat370_sw_logo_title_7
+fc_def_empty_var moat370_sw_logo_title_8
+fc_def_empty_var moat370_sw_vYYNN
+fc_def_empty_var moat370_sw_vrsn
+fc_def_empty_var moat370_sw_copyright
+fc_def_empty_var moat370_sw_author
+fc_def_empty_var moat370_sw_email
+fc_def_empty_var moat370_sw_dbtool
+fc_def_empty_var moat370_sw_enc_sql
+fc_def_empty_var moat370_sw_gchart_path
+fc_def_empty_var moat370_sw_db_type
 
 fc_set_value_var_nvl 'moat370_sw_misc_fdr'   "${moat370_sw_misc_fdr}" 'js'
 fc_set_value_var_nvl 'moat370_sw_rpt_cols'   "${moat370_sw_rpt_cols}" '7'
@@ -74,7 +74,7 @@ fc_set_value_var_nvl 'moat370_sw_email'     "${moat370_sw_email}"     'unknown@e
 fc_validate_variable moat370_sw_email      LOWER_CASE
 fc_validate_variable moat370_sw_author     NOT_NULL
 
-## moat370_sw_dbtool declares if the API is being used primarily for a database or is just a interface to other calls.
+## moat370_sw_dbtool fc_def_empty_vars if the API is being used primarily for a database or is just a interface to other calls.
 fc_set_value_var_nvl 'moat370_sw_dbtool'  "${moat370_sw_dbtool}"    'Y'
 fc_validate_variable moat370_sw_dbtool    Y_N
 
@@ -85,17 +85,17 @@ fc_set_value_var_nvl 'moat370_sw_gchart_path'  "${moat370_sw_gchart_path}"  'htt
 
 ##-------------------------
 
-declare moat370_sw_param1
-declare moat370_sw_param2
-declare moat370_sw_param3
-declare moat370_sw_param4
-declare moat370_sw_param5
+fc_def_empty_var moat370_sw_param1
+fc_def_empty_var moat370_sw_param2
+fc_def_empty_var moat370_sw_param3
+fc_def_empty_var moat370_sw_param4
+fc_def_empty_var moat370_sw_param5
 
-declare moat370_sw_param1_var
-declare moat370_sw_param2_var
-declare moat370_sw_param3_var
-declare moat370_sw_param4_var
-declare moat370_sw_param5_var
+fc_def_empty_var moat370_sw_param1_var
+fc_def_empty_var moat370_sw_param2_var
+fc_def_empty_var moat370_sw_param3_var
+fc_def_empty_var moat370_sw_param4_var
+fc_def_empty_var moat370_sw_param5_var
 
 fc_set_value_var_nvl 'moat370_sw_param1' "${moat370_sw_param1}" 'section'
 fc_set_value_var_nvl 'moat370_sw_param2' "${moat370_sw_param2}" 'null'
@@ -111,13 +111,13 @@ fc_validate_variable moat370_sw_param5 RANGE 'license,section,custom,null'
 
 ##-------------------------
 
-declare moat370_pre_encrypt_output
-declare moat370_pre_encrypt_html
-declare moat370_pre_compress_html
+fc_def_empty_var moat370_pre_encrypt_output
+fc_def_empty_var moat370_pre_encrypt_html
+fc_def_empty_var moat370_pre_compress_html
 
-declare moat370_conf_encrypt_output
-declare moat370_conf_encrypt_html
-declare moat370_conf_compress_html
+fc_def_empty_var moat370_conf_encrypt_output
+fc_def_empty_var moat370_conf_encrypt_html
+fc_def_empty_var moat370_conf_compress_html
 
 fc_set_value_var_nvl 'moat370_conf_encrypt_output' "${moat370_pre_encrypt_output}" "${moat370_conf_encrypt_output}"
 fc_set_value_var_nvl 'moat370_conf_encrypt_html'   "${moat370_pre_encrypt_html}"   "${moat370_conf_encrypt_html}"  
@@ -133,16 +133,16 @@ fc_validate_variable moat370_conf_compress_html  ON_OFF
 
 ##-------------------------
 
-declare moat370_conf_incl_html
-declare moat370_conf_incl_text
-declare moat370_conf_incl_csv
-declare moat370_conf_incl_line
-declare moat370_conf_incl_pie
-declare moat370_conf_incl_bar
-declare moat370_conf_incl_graph
-declare moat370_conf_incl_map
-declare moat370_conf_incl_treemap
-declare moat370_conf_incl_file
+fc_def_empty_var moat370_conf_incl_html
+fc_def_empty_var moat370_conf_incl_text
+fc_def_empty_var moat370_conf_incl_csv
+fc_def_empty_var moat370_conf_incl_line
+fc_def_empty_var moat370_conf_incl_pie
+fc_def_empty_var moat370_conf_incl_bar
+fc_def_empty_var moat370_conf_incl_graph
+fc_def_empty_var moat370_conf_incl_map
+fc_def_empty_var moat370_conf_incl_treemap
+fc_def_empty_var moat370_conf_incl_file
 
 fc_set_value_var_nvl 'moat370_conf_incl_html'    "${moat370_conf_incl_html}"    'Y'
 fc_set_value_var_nvl 'moat370_conf_incl_text'    "${moat370_conf_incl_text}"    'N'
@@ -168,16 +168,16 @@ fc_validate_variable moat370_conf_incl_file    Y_N
 
 ##-------------------------
 
-declare moat370_conf_def_html
-declare moat370_conf_def_text
-declare moat370_conf_def_csv
-declare moat370_conf_def_line
-declare moat370_conf_def_pie
-declare moat370_conf_def_bar
-declare moat370_conf_def_graph
-declare moat370_conf_def_map
-declare moat370_conf_def_treemap
-declare moat370_conf_def_file
+fc_def_empty_var moat370_conf_def_html
+fc_def_empty_var moat370_conf_def_text
+fc_def_empty_var moat370_conf_def_csv
+fc_def_empty_var moat370_conf_def_line
+fc_def_empty_var moat370_conf_def_pie
+fc_def_empty_var moat370_conf_def_bar
+fc_def_empty_var moat370_conf_def_graph
+fc_def_empty_var moat370_conf_def_map
+fc_def_empty_var moat370_conf_def_treemap
+fc_def_empty_var moat370_conf_def_file
 
 fc_set_value_var_nvl 'moat370_conf_def_html'    "${moat370_conf_def_html}"    'Y'
 fc_set_value_var_nvl 'moat370_conf_def_text'    "${moat370_conf_def_text}"    'N'
@@ -203,12 +203,12 @@ fc_validate_variable moat370_conf_def_file    Y_N
 
 ##-------------------------
 
-declare moat370_conf_incl_trace
-declare moat370_conf_incl_opatch
-declare moat370_conf_ask_license
-declare moat370_conf_sql_format
-declare moat370_conf_sql_highlight
-declare moat370_conf_tablefilter
+fc_def_empty_var moat370_conf_incl_trace
+fc_def_empty_var moat370_conf_incl_opatch
+fc_def_empty_var moat370_conf_ask_license
+fc_def_empty_var moat370_conf_sql_format
+fc_def_empty_var moat370_conf_sql_highlight
+fc_def_empty_var moat370_conf_tablefilter
 
 fc_set_value_var_nvl 'moat370_conf_incl_trace'    "${moat370_conf_incl_trace}"   'N'
 fc_set_value_var_nvl 'moat370_conf_incl_opatch'   "${moat370_conf_incl_opatch}"   'N'
@@ -226,10 +226,10 @@ fc_validate_variable moat370_conf_tablefilter   Y_N
 
 ##-------------------------
 
-declare moat370_def_sql_format
-declare moat370_def_sql_highlight
-declare moat370_def_sql_maxrows
-declare moat370_def_sql_show
+fc_def_empty_var moat370_def_sql_format
+fc_def_empty_var moat370_def_sql_highlight
+fc_def_empty_var moat370_def_sql_maxrows
+fc_def_empty_var moat370_def_sql_show
 
 fc_set_value_var_nvl 'moat370_def_sql_format'    "${moat370_def_sql_format}"    'Y'
 fc_set_value_var_nvl 'moat370_def_sql_highlight' "${moat370_def_sql_highlight}" 'Y'
@@ -243,17 +243,17 @@ fc_validate_variable moat370_def_sql_show      Y_N
 
 ##-------------------------
 
-declare moat370_sections
+fc_def_empty_var moat370_sections
 
 ##-------------------------
 
-declare moat370_conf_days
-declare moat370_conf_date_from
-declare moat370_conf_date_to
-declare moat370_conf_work_time_from
-declare moat370_conf_work_time_to
-declare moat370_conf_work_day_from
-declare moat370_conf_work_day_to
+fc_def_empty_var moat370_conf_days
+fc_def_empty_var moat370_conf_date_from
+fc_def_empty_var moat370_conf_date_to
+fc_def_empty_var moat370_conf_work_time_from
+fc_def_empty_var moat370_conf_work_time_to
+fc_def_empty_var moat370_conf_work_day_from
+fc_def_empty_var moat370_conf_work_day_to
 
 fc_set_value_var_nvl 'moat370_conf_days'           "${moat370_conf_days}"           '31'
 fc_set_value_var_nvl 'moat370_conf_date_from'      "${moat370_conf_date_from}"      'YYYY-MM-DD'
@@ -271,6 +271,6 @@ fc_validate_variable moat370_conf_work_day_to    IS_NUMBER
 
 ##-------------------------
 
-declare moat370_sw_desc_linesize
+fc_def_empty_var moat370_sw_desc_linesize
 fc_set_value_var_nvl 'moat370_sw_desc_linesize'  "${moat370_sw_desc_linesize}"  '80'
 fc_validate_variable  moat370_sw_desc_linesize   IS_NUMBER

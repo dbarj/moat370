@@ -38,8 +38,8 @@
 # fc_db_pre_exec_call
 
 # printf %s\\n "$-"
-bin_check sqlplus
-bin_check mkfifo
+bin_check_exit sqlplus
+bin_check_exit mkfifo
 
 fc_db_startup_connection ()
 {
@@ -58,9 +58,8 @@ fc_db_end_connection ()
   [ -p "${v_database_fifo_file}" ] && rm -f "${v_database_fifo_file}"
   fc_seq_output_file v_database_out_file
   fc_zip_file "${moat370_zip_filename}" "${v_database_out_file}"
-  kill "${v_db_client_pid}"
+  kill_db_connection
 }
-
 
 fc_db_check_connection ()
 {

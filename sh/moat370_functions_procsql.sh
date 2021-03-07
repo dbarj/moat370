@@ -218,7 +218,9 @@ fc_exec_item ()
   fc_set_value_var_decode sql_format "${moat370_conf_sql_format}"    'N' 'N' "${sql_format}"
 
   # If fc_exec_item is running for a SQL_TEXT
+  fc_def_empty_var raw_spool_filename
   fc_def_empty_var csv_spool_filename
+
   if [ -n "${sql_text}" ]
   then
     if ${input_csv_mode}
@@ -294,14 +296,14 @@ fc_exec_item ()
 
   ## Check D3 Graphs
   local moat370_d3_graph_valid_opts='|circle_packing|'
-  declare moat370_d3_graph_skip
-  declare d3_graph
+  fc_def_empty_var moat370_d3_graph_skip
+  fc_def_empty_var d3_graph
 
   set +u
   [ -z "${d3_graph}" ] && d3_graph=""
   set +u
 
-  declare skip_moat370_d3_graph
+  fc_def_empty_var skip_moat370_d3_graph
   [ -z "${d3_graph}" ] && skip_moat370_d3_graph='-'
 
   [ $(instr_var "${moat370_d3_graph_skip}" "|${d3_graph}|") -gt 0 ] && skip_moat370_d3_graph='-'
@@ -323,7 +325,11 @@ fc_exec_item ()
 
   ## cleanup
   [ -f "${moat370_query}" ] && rm -f "${moat370_query}"
-  [ -n "${csv_spool_filename}" ] && rm -f "${csv_spool_filename}"
+  if [ -n "${sql_text}" ]
+  then
+    [ -n "${csv_spool_filename}" ] && rm -f "${csv_spool_filename}"
+    [ -n "${raw_spool_filename}" ] && rm -f "${raw_spool_filename}"
+  fi
   fc_reset_defaults
 
   ##
@@ -577,7 +583,7 @@ fc_html_topic_intro ()
   [ "${sql_hl}" = 'Y' ] && echo '<script type="text/javascript" src="highlight.pack.js"></script>' >> "${one_spool_fullpath_filename}"
   [ "${sql_hl}" = 'Y' ] && echo '<link rel="stylesheet" href="vs.css">' >> "${one_spool_fullpath_filename}"
 
-  declare main_table_print
+  fc_def_empty_var main_table_print
   fc_set_value_var_nvl2 main_table_print "${main_table}" " <em>(${main_table})</em>" ''
 
   ## topic begin
@@ -666,10 +672,10 @@ fc_add_tablefilter ()
   local in_html_src_file="$1"
   ##
 
-  declare filtertab_option1
-  declare filtertab_option2
-  declare filtertab_option3
-  declare filtertab_option4
+  fc_def_empty_var filtertab_option1
+  fc_def_empty_var filtertab_option2
+  fc_def_empty_var filtertab_option3
+  fc_def_empty_var filtertab_option4
 
   fc_set_value_var_nvl 'filtertab_option1' "${filtertab_option1}" "alternate_rows: true, col_types: ['number'],"
   fc_set_value_var_nvl 'filtertab_option2' "${filtertab_option2}" "rows_counter: true, btn_reset: true, loader: true,"

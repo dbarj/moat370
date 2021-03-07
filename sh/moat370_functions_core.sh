@@ -35,13 +35,24 @@ kill_db_connection ()
   fc_def_empty_var v_db_client_pid
   if [ -n "${v_db_client_pid}" ]
   then
-    kill ${v_db_client_pid}
+    if kill -0 ${v_db_client_pid} > /dev/null 2>&1
+    then
+      kill ${v_db_client_pid}
+    fi
   fi
 }
 
 save_bash_variables ()
 {
-  ( set -o posix ; set ) > last_run_vars.env
+  # Save all script variables for easier debugging.
+  fc_def_empty_var moat370_sw_output_fdr
+  if [ -n "${moat370_sw_output_fdr}" ] && \
+     [ -w "${moat370_sw_output_fdr}" ] && \
+     fc_is_debug_enabled
+  then
+    fc_def_output_file last_run_vars 'last_run_vars.env'
+    ( set -o posix ; set ) > "${last_run_vars}"
+  fi
 }
 
 exit_error ()
@@ -60,17 +71,23 @@ trap_error ()
   exit_error "Error on line $1."
 }
 
+bin_check_exit ()
+{
+  # Check if binary exists
+  if ! bin_check $1
+  then
+  	exit_error "The \"$1\" command could not be found. Please add to PATH..."
+  fi
+}
+
 bin_check ()
 {
   # Check if binary exists
-  set +e
-  which $1 > /dev/null 2> /dev/null
-  v_ret=$?
-  set -e
-
-  if [ $v_ret -ne 0 ]
+  if which $1 > /dev/null 2> /dev/null
   then
-  	exit_error "The \"$1\" command could not be found. Please add to PATH..."
+    return 0
+  else
+    return 1
   fi
 }
 
@@ -237,6 +254,7 @@ fc_seq_output_file ()
   
   let file_seq=file_seq+1
   
+  v_file_path=''
   if [ $(instr_var "${in_param_content}" '/') -gt 0 ]
   then
     v_file_path=$(sed 's:[^/]*$::g' <<< "${in_param_content}")
@@ -545,13 +563,13 @@ fc_encode_html_internal ()
 
   if [ "$flag_encr" = "ON" ]
   then
-    which openssl > /dev/null 2>&- || return 1
+    bin_check openssl || return 1
     [ -f "${x_file}" ] || return 1
   fi
   if [ "$flag_comp" = "ON" ]
   then
-    which gzip > /dev/null 2>&- || return 1
-    which base64 > /dev/null 2>&- || return 1
+    bin_check gzip || return 1
+    bin_check base64 || return 1
   fi
 
   in_start_line=`${cmd_sed} -ne /\<!--BEGIN_SENSITIVE_DATA--\>/= "${in_file}"`
@@ -622,7 +640,7 @@ fc_zip_file ()
   [ -z "${v_move}" ] && v_move='true'
   [ -z "${v_relative}" ] && v_relative='true'
 
-  declare v_param
+  v_param=''
   ${v_move} && v_param="${v_param} -m"
   ${v_relative} && v_param="${v_param} -j"
 

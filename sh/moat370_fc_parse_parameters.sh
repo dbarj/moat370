@@ -97,11 +97,11 @@ then
   exit_error ${v_msg}
 fi
 
-declare moat370_param1
-declare moat370_param2
-declare moat370_param3
-declare moat370_param4
-declare moat370_param5
+fc_def_empty_var moat370_param1
+fc_def_empty_var moat370_param2
+fc_def_empty_var moat370_param3
+fc_def_empty_var moat370_param4
+fc_def_empty_var moat370_param5
 
 fc_set_value_var_nvl 'moat370_param1' "${in_main_param1}" "${moat370_param1}"
 fc_set_value_var_nvl 'moat370_param2' "${in_main_param2}" "${moat370_param2}"
@@ -109,14 +109,14 @@ fc_set_value_var_nvl 'moat370_param3' "${in_main_param3}" "${moat370_param3}"
 fc_set_value_var_nvl 'moat370_param4' "${in_main_param4}" "${moat370_param4}"
 fc_set_value_var_nvl 'moat370_param5' "${in_main_param5}" "${moat370_param5}"
 
-declare license_pack_param
+fc_def_empty_var license_pack_param
 fc_set_value_var_decode 'license_pack_param' "${moat370_sw_param1}" 'license' "${moat370_param1}" "${license_pack_param}"
 fc_set_value_var_decode 'license_pack_param' "${moat370_sw_param2}" 'license' "${moat370_param2}" "${license_pack_param}"
 fc_set_value_var_decode 'license_pack_param' "${moat370_sw_param3}" 'license' "${moat370_param3}" "${license_pack_param}"
 fc_set_value_var_decode 'license_pack_param' "${moat370_sw_param4}" 'license' "${moat370_param4}" "${license_pack_param}"
 fc_set_value_var_decode 'license_pack_param' "${moat370_sw_param5}" 'license' "${moat370_param5}" "${license_pack_param}"
 
-declare sections_param
+fc_def_empty_var sections_param
 fc_set_value_var_decode 'sections_param' "${moat370_sw_param1}" 'section' "${moat370_param1}" "${sections_param}"
 fc_set_value_var_decode 'sections_param' "${moat370_sw_param2}" 'section' "${moat370_param2}" "${sections_param}"
 fc_set_value_var_decode 'sections_param' "${moat370_sw_param3}" 'section' "${moat370_param3}" "${sections_param}"

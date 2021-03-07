@@ -41,11 +41,11 @@ set -u
 moat370_main_time0=$(get_secs)
 
 ## Define SW folder and load configurations:
-declare moat370_pre_sw_base
+fc_def_empty_var moat370_pre_sw_base
 # fc_set_value_var_nvl 'moat370_sw_base' "${moat370_pre_sw_base}" "./"
 fc_set_value_var_nvl 'moat370_sw_base' "${moat370_pre_sw_base}" "${v_base_dir}"
 
-declare moat370_pre_sw_folder
+fc_def_empty_var moat370_pre_sw_folder
 #fc_set_value_var_nvl 'moat370_sw_folder' "${moat370_pre_sw_folder}" "${moat370_sw_base}/sql"
 fc_set_value_var_nvl 'moat370_sw_folder' "${moat370_pre_sw_folder}" "."
 if [ -f "${moat370_sw_folder}/cfg/00_software.cfg" ]
@@ -156,10 +156,10 @@ else
   fc_add_tablefilter () { true; }
 fi
 
-declare moat370_pre_enc_pub_file
+fc_def_empty_var moat370_pre_enc_pub_file
 fc_set_value_var_nvl 'moat370_enc_pub_file' "${moat370_pre_enc_pub_file}" "${moat370_sw_folder}/${moat370_sw_misc_fdr}/${moat370_sw_cert_file}"
 
-declare moat370_pre_sw_key_file
+fc_def_empty_var moat370_pre_sw_key_file
 fc_def_output_file enc_key_file 'key.bin'
 fc_set_value_var_nvl 'enc_key_file' "${moat370_pre_sw_key_file}" "${enc_key_file}"
  
@@ -195,10 +195,10 @@ else
   cmd_gawk=${cmd_awk}
 fi
 
-bin_check ${cmd_awk}
-bin_check ${cmd_grep}
-bin_check ${cmd_sed}
-bin_check ${cmd_gawk}
+bin_check_exit ${cmd_awk}
+bin_check_exit ${cmd_grep}
+bin_check_exit ${cmd_sed}
+bin_check_exit ${cmd_gawk}
 
 cmd_awk_awk_func_dir="${v_this_dir}/csv-parser.awk"
 cmd_awk_param="-f ${cmd_awk_awk_func_dir} -v separator=, -v enclosure=\""
@@ -330,7 +330,7 @@ else
 fi
 
 ## Startup DB Connection
-declare v_db_client_pid
+fc_def_empty_var v_db_client_pid
 fc_load_db_functions
 fc_db_startup_connection
 [ "${moat370_sw_db_type}" != "offline" ] && echo_time "Starting ${moat370_sw_db_type} in background. Connecting..."
@@ -392,13 +392,13 @@ fc_def_output_file moat370_zip_filename "${moat370_main_filename}_${moat370_file
 moat370_tracefile_identifier="${common_moat370_prefix}"
 fc_def_output_file moat370_query '${common_moat370_prefix}_query.sql'
 
-declare moat370_pre_sw_output_file
+fc_def_empty_var moat370_pre_sw_output_file
 fc_set_value_var_nvl 'moat370_zip_filename' "${moat370_pre_sw_output_file}" "${moat370_zip_filename}"
 
-declare exec_seq
+fc_def_empty_var exec_seq
 fc_set_value_var_decode exec_seq "${exec_seq}" '' "1" "$((exec_seq+1))"
 
-declare file_seq
+fc_def_empty_var file_seq
 fc_set_value_var_nvl file_seq "${file_seq}" 0
 
 fc_seq_output_file moat370_main_report
@@ -503,8 +503,8 @@ current_time=''
 fc_section_variables
 
 ## Print Database and License info only if it is a DB tool.
-declare db_lic_info
-declare db_ver_info
+fc_def_empty_var db_lic_info
+fc_def_empty_var db_ver_info
 if [ "${moat370_sw_dbtool}" = 'Y' ]
 then
   db_lic_info="Database:${database_name_short} License:${license_pack}."

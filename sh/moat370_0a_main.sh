@@ -43,8 +43,8 @@ source "${v_this_dir}"/moat370_functions_charts.sh
 trap 'trap_error $LINENO' ERR
 trap 'exit_error "Code interrupted."' SIGINT SIGTERM
 
-bin_check awk
-bin_check mkfifo
+bin_check_exit awk
+bin_check_exit mkfifo
 
 source "${v_this_dir}"/moat370_0b_pre.sh
 

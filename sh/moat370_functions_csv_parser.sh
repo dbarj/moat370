@@ -37,7 +37,7 @@ fc_csv_to_html_table ()
   local v_line_o="<tr>"
   local v_line_c="</tr>"
 
-  local step_source
+  local step_source=''
   if grep -q '<' "${v_sourcecsv}" || grep -q '>' "${v_sourcecsv}"
   then
     fc_def_output_file step_source 'step_source.csv'

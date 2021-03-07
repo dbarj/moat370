@@ -38,7 +38,7 @@ echo "2. Review ${moat370_main_report_nopath}" >> "${moat370_readme}"
 ## fc_encode_html ${moat370_log2}
 
 ## Zip
-declare moat370_d3_usage
+fc_def_empty_var moat370_d3_usage
 if [ "${moat370_d3_usage}" = 'Y' ]
 then
   fc_zip_file "${moat370_zip_filename}" "${moat370_fdr_js}/d3.min.js" false
@@ -46,7 +46,7 @@ fi
 
 fc_clean_file_name "moat370_log3" "moat370_log3_nopath" "PATH"
 
-declare moat370_tf_usage
+fc_def_empty_var moat370_tf_usage
 if [ "${moat370_tf_usage}" = 'Y' ]
 then
   v_zipfdr=$(dirname "${moat370_zip_filename}")
