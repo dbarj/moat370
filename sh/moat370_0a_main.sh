@@ -86,7 +86,7 @@ do
   else
     echo "<td class=\"c i${v_i}\">${v_i}/${moat370_total_cols}</td>" >> "${moat370_main_report}"
   fi
-  let v_i=${v_i}+1
+  v_i=$(do_calc "${v_i}+1")
 done
 
 echo '</tr><tr class="main"><td>' >> "${moat370_main_report}"
@@ -106,7 +106,7 @@ do
   else
     echo '</td>' >> "${moat370_main_report}"
   fi
-  let v_i=${v_i}+1
+  v_i=$(do_calc "${v_i}+1")
 done
 
 ## main footer

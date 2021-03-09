@@ -191,7 +191,13 @@ fc_exec_item ()
   ## Remove spaces before or after
   sql_text=$(trim_var "${sql_text}")
 
-  sql_text_display=$(fc_escape_markup_characters <(echo "${sql_text_display}"))
+  # Not POSIX:
+  # sql_text_display=$(fc_escape_markup_characters <(echo "${sql_text_display}"))
+  fc_def_output_file sql_text_display_temp "sql_text_display_temp.sql"
+  echo "${sql_text_display}" > "${sql_text_display_temp}"
+  sql_text_display=$(fc_escape_markup_characters "${sql_text_display_temp}")
+  rm -f "${sql_text_display_temp}"
+  unset sql_text_display_temp
 
   fc_zip_file "${moat370_zip_filename}" "${moat370_log}" false
 
@@ -231,11 +237,11 @@ fc_exec_item ()
       fc_db_check_file_sql_error "${csv_spool_filename}"
       then
         row_num=$(wc -l < "${csv_spool_filename}" | tr -d '[:space:]')
-        let row_num=${row_num}-1 || true # Remove Header. let 0 returns 127
+        row_num=$(do_calc 'row_num-1') # Remove Header.
         ## If row_num is 0, return 0, otherwise subtract row_num_dif giving nothing less than a -1 result.
         if [ $row_num -ne 0 ]
         then
-          let row_num=${row_num}+${row_num_dif} || true
+          row_num=$(do_calc 'row_num+row_num_dif')
           row_num=$(greatest_num "${row_num}" "-1")
         fi
       fi
@@ -258,11 +264,11 @@ fc_exec_item ()
       if [ -f "${csv_spool_filename}" ]
       then
         row_num=$(wc -l < "${csv_spool_filename}" | tr -d '[:space:]')
-        let row_num=${row_num}-1 || true # Remove Header. let 0 returns 127
+        row_num=$(do_calc 'row_num-1') # Remove Header.
         ## If row_num is 0, return 0, otherwise subtract row_num_dif giving nothing less than a -1 result.
         if [ $row_num -ne 0 ]
         then
-          let row_num=${row_num}+${row_num_dif} || true
+          row_num=$(do_calc 'row_num+row_num_dif')
           row_num=$(greatest_num "${row_num}" "-1")
         fi
       fi
@@ -337,7 +343,7 @@ fc_exec_item ()
   moat370_section_print='YES'
 
   ## report sequence
-  report_sequence=$((report_sequence+1))
+  report_sequence=$(do_calc 'report_sequence+1')
 }
 
 fc_proc_one_table ()
@@ -410,7 +416,7 @@ fc_proc_one_csv ()
   ## get time t1
   get_time_t1=$(get_secs)
 
-  total_hours="Topic execution time: $(convert_secs $((get_time_t1-get_time_t0))).'"
+  total_hours="Topic execution time: $(convert_secs $(do_calc 'get_time_t1-get_time_t0'))."
 
   ## update log2
   echo "$(date "${moat370_date_format}"), $(let $get_time_t1-$get_time_t0)s, rows: ${row_num}, ${section_id}, ${main_table}, ${moat370_prev_sql_id}, ${moat370_prev_child_number}, ${title_no_spaces}, csv, ${one_spool_fullpath_filename}" >> "${moat370_log2}"
@@ -495,7 +501,7 @@ fc_proc_one_text_file ()
   ## get time t1
   get_time_t1=$(get_secs)
 
-  total_hours="Topic execution time: $(convert_secs $((get_time_t1-get_time_t0))).'"
+  total_hours="Topic execution time: $(convert_secs $(do_calc 'get_time_t1-get_time_t0'))."
 
   ## update log2
   fc_def_empty_var moat370_prev_sql_id
@@ -653,7 +659,7 @@ fc_html_topic_end ()
   ## get time t1
   get_time_t1=$(get_secs)
 
-  total_hours="Topic execution time: $(convert_secs $((get_time_t1-get_time_t0))).'"
+  total_hours="Topic execution time: $(convert_secs $(do_calc 'get_time_t1-get_time_t0'))."
 
   moat370_time_stamp=$(date "${moat370_date_format}")
   fc_paste_file_replacing_variables "${v_base_dir}"/cfg/moat370_html_footer.html "${one_spool_fullpath_filename}"

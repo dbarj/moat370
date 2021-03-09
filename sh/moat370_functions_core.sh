@@ -252,7 +252,7 @@ fc_seq_output_file ()
 
   eval in_param_content=\$${in_param}
   
-  let file_seq=file_seq+1
+  file_seq=$(do_calc "file_seq+1")
   
   v_file_path=''
   if [ $(instr_var "${in_param_content}" '/') -gt 0 ]
@@ -347,7 +347,7 @@ fc_zip_driver_files ()
   local in_file_full in_file_name in_file_path step_new_file_name
   in_file_full="$1"
 
-  let driver_seq=${driver_seq}+1
+  driver_seq=$(do_calc "driver_seq+1")
 
   fc_clean_file_name in_file_full in_file_name PATH
 
@@ -398,8 +398,12 @@ fc_reset_defaults ()
   d3_graph=''
   ##
   title_suffix=''
-  haxis="${db_version} ${cores_threads_hosts}"
   ##
+  stacked=''
+  haxis="${db_version} ${cores_threads_hosts}"
+  vaxis=''
+  vbaseline=''
+  chartype=''
   ## needed reset after eventual sqlmon
   fc_db_reset_options
   ##
@@ -429,7 +433,7 @@ fc_wait_string ()
       break
     fi
     sleep ${v_sleep_time}
-    let v_total_sleep=${v_total_sleep}+1
+    v_total_sleep=$(do_calc "v_total_sleep+1")
     if [ ${v_total_sleep} -gt ${v_loop_limit} ]
     then
       cat "${v_file}"

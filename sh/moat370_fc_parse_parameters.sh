@@ -47,7 +47,7 @@ fc_set_value_var_decode v_p2_check "${moat370_sw_param2}" 'license' 1 0
 fc_set_value_var_decode v_p3_check "${moat370_sw_param3}" 'license' 1 0
 fc_set_value_var_decode v_p4_check "${moat370_sw_param4}" 'license' 1 0
 fc_set_value_var_decode v_p5_check "${moat370_sw_param5}" 'license' 1 0
-v_tot_lic=$((v_p1_check+v_p2_check+v_p3_check+v_p4_check+v_p5_check))
+v_tot_lic=$(do_calc 'v_p1_check+v_p2_check+v_p3_check+v_p4_check+v_p5_check')
 
 if [ $v_tot_lic -gt 1 ]
 then
@@ -61,7 +61,7 @@ fc_set_value_var_decode v_p2_check "${moat370_sw_param2}" 'section' 1 0
 fc_set_value_var_decode v_p3_check "${moat370_sw_param3}" 'section' 1 0
 fc_set_value_var_decode v_p4_check "${moat370_sw_param4}" 'section' 1 0
 fc_set_value_var_decode v_p5_check "${moat370_sw_param5}" 'section' 1 0
-v_tot_sec=$((v_p1_check+v_p2_check+v_p3_check+v_p4_check+v_p5_check))
+v_tot_sec=$(do_calc 'v_p1_check+v_p2_check+v_p3_check+v_p4_check+v_p5_check')
 
 if [ $v_tot_sec -gt 1 ]
 then

@@ -225,7 +225,7 @@ cmd_awk_csv="${cmd_gawk} ${cmd_awk_param}"
 ## Original query commented. If the tool is AWR based, move and adapt it to pre sql specific of the tool
 ##SELECT TO_CHAR(LEAST(CEIL(SYSDATE - CAST(MIN(begin_interval_time) AS DATE)), GREATEST(31, TO_NUMBER(NVL(TRIM("${moat370_conf_days}"), '31'))))) history_days FROM dba_hist_snapshot WHERE "${diagnostics_pack}"='Y' AND dbid=(SELECT dbid FROM v$database)
 history_days=$(greatest_num 31 "${moat370_conf_days}")
-history_secs=$((history_days*24*60*60))
+history_secs=$(do_calc "${history_days}*24*60*60")
 
 if [ "${moat370_conf_date_from}" != 'YYYY-MM-DD' ]
 then
@@ -245,12 +245,12 @@ then
   then
     exit_error "moat370_conf_date_from is greater then moat370_conf_date_to."
   fi
-  history_secs=$((v_epoch_conf_date_to-v_epoch_conf_date_from))
-  history_days=$(ConvSecsToDays $history_secs)
-  ((history_days=history_days+1))
+  history_secs=$(do_calc "${v_epoch_conf_date_to}-${v_epoch_conf_date_from}")
+  history_days=$(ConvSecsToDays ${history_secs})
+  history_days=$(do_calc "${history_days}+1")
 fi
 
-hist_work_days=$((history_days*5/7))
+hist_work_days=$(do_calc "history_days*5/7")
 
 ## Dates format
 moat370_date_format='+%Y-%m-%d/%H:%M:%S'
@@ -261,14 +261,14 @@ v_epoch_today=$(ConvYMDToEpoch "${v_today}")
 
 if [ "${moat370_conf_date_from}" = 'YYYY-MM-DD' ]
 then
-  moat370_date_from=$(ConvEpochToYMD $((v_epoch_today-history_secs)))
+  moat370_date_from=$(ConvEpochToYMD $(do_calc "v_epoch_today-history_secs"))
 else
   moat370_date_from="${moat370_conf_date_from}"
 fi
 
 if [ "${moat370_conf_date_to}" = 'YYYY-MM-DD' ]
 then
-  moat370_date_to=$(ConvEpochToYMD $((v_epoch_today+(24*60*60))))
+  moat370_date_to=$(ConvEpochToYMD $(do_calc "v_epoch_today+(24*60*60)"))
 else
   moat370_date_to="${moat370_conf_date_to}"
 fi
@@ -360,7 +360,7 @@ database_name_short=$(substr_var "${database_name_short}" 1 10)
 dot_pos=$(instr_var "${database_name_short}" '.')
 if [ $dot_pos -gt 1 ]
 then
-  let dot_pos=dot_pos-1
+  dot_pos=$(do_calc "${dot_pos}-1")
   database_name_short=$(substr_var "${database_name_short}" 1 $dot_pos)
 fi
 database_name_short=$(tr -cd '[:alnum:]_-' <<< "${database_name_short}")
@@ -371,7 +371,7 @@ host_name_short=$(substr_var "${host_name_short}" 1 30)
 dot_pos=$(instr_var "${host_name_short}" '.')
 if [ $dot_pos -gt 1 ]
 then
-  let dot_pos=dot_pos-1
+  dot_pos=$(do_calc "${dot_pos}-1")
   database_name_short=$(substr_var "${host_name_short}" 1 $dot_pos)
 fi
 host_name_short=$(tr -cd '[:alnum:]_-' <<< "${host_name_short}")
@@ -379,7 +379,6 @@ host_name_short=$(tr -cd '[:alnum:]_-' <<< "${host_name_short}")
 ## setup
 sql_trace_level='1'
 title=''
-title_no_spaces=''
 title_suffix=''
 
 ## timestamp on filename
@@ -410,7 +409,7 @@ fc_def_empty_var moat370_pre_sw_output_file
 fc_set_value_var_nvl 'moat370_zip_filename' "${moat370_pre_sw_output_file}" "${moat370_zip_filename}"
 
 fc_def_empty_var exec_seq
-fc_set_value_var_decode exec_seq "${exec_seq}" '' "1" "$((exec_seq+1))"
+fc_set_value_var_decode exec_seq "${exec_seq}" '' "1" "$(do_calc 'exec_seq+1')"
 
 fc_def_empty_var file_seq
 fc_set_value_var_nvl file_seq "${file_seq}" 0
@@ -460,10 +459,7 @@ fc_set_value_var_decode moat370_def_skip_treemap "${moat370_conf_def_treemap}" '
 fc_set_value_var_decode moat370_def_skip_file    "${moat370_conf_def_file}"    'N' "--" ''
 
 top_level_hints='NO_MERGE'
-sq_fact_hints='MATERIALIZE NO_MERGE'
-ds_hint='DYNAMIC_SAMPLING(4)'
 ##
-skip_all=''
 
 ## get cores_threads_hosts
 if [ ${hosts_count} -eq 1 ]
@@ -472,12 +468,6 @@ then
 else
   cores_threads_hosts="cores:${avg_core_count}(avg) threads:${avg_thread_count}(avg) hosts:${hosts_count}"
 fi
-
-chartype=''
-stacked=''
-haxis="${db_version} ${cores_threads_hosts}"
-vaxis=''
-vbaseline=''
 
 tit_01=''
 tit_02=''
@@ -494,11 +484,6 @@ tit_12=''
 tit_13=''
 tit_14=''
 tit_15=''
-
-exadata=''
-column_number='1'
-recovery='&recovery'
-## this above is to handle event "RMAN backup & recovery I/O"
 
 if [ -z ${history_days} ]
 then

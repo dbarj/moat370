@@ -302,7 +302,7 @@ fc_proc_bar_chart ()
     if [ ${l_value} -ge ${bar_minperc} ]
     then
       echo ",['${l_bar}', ${l_value}, '${l_style}', '${l_tooltip}']" >> "${one_spool_fullpath_filename}"
-      l_others=$((l_others-l_value))
+      l_others=$(do_calc 'l_others-l_value')
     fi
   done < "${csv_spool_filename}"
 

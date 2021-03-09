@@ -90,7 +90,7 @@ fc_db_check_connection ()
       break
     fi
     sleep ${v_sleep_time}
-    let v_total_sleep=${v_total_sleep}+1
+    v_total_sleep=$(do_calc "v_total_sleep+1")
     if [ ${v_total_sleep} -gt ${v_loop_limit} ]
     then
       cat "${v_database_out_file}"

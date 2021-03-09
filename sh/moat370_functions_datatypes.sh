@@ -34,11 +34,14 @@ get_secs ()
 
 convert_secs ()
 {
+  local h m s v_sec
+  v_sec="$1"
   # Return seconds in HH:MI:SS format.
-  ((h=${1}/3600))
-  ((m=(${1}%3600)/60))
-  ((s=${1}%60))
+  h=$(do_calc 'v_sec/3600')
+  m=$(do_calc '(v_sec%3600)/60')
+  s=$(do_calc 'v_sec%60')
   printf "%02d:%02d:%02d\n" $h $m $s
+  # The OR TRUE is due to output 0 gives a return 1.
 }
 
 trim_var ()
@@ -114,12 +117,13 @@ ConvEpochToYMD ()
 ConvSecsToDays ()
 {
   local v_in_epoch=$1
-  echo $((v_in_epoch/24/2600))
+  echo $(do_calc 'v_in_epoch/24/3600')
 }
 
 substr_var ()
 {
-  local v_len=$(($2+$3-1))
+  local v_len
+  v_len=$(do_calc "$2+$3-1")
   cut -c$2-$v_len <<< "$1"
 }
 
@@ -161,6 +165,11 @@ ere_quote ()
 {
   # Quote regex characters on string
   ${cmd_sed} 's/[]\.|$(){}?+*^]/\\&/g' <<< "$*"
+}
+
+do_calc ()
+{
+  echo "$(($1))"
 }
 
 #### END OF FILE ####
