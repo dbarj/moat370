@@ -94,7 +94,7 @@ bin_check ()
 var_check ()
 {
   # Check if variable is defined
-  if declare -p "$1" >/dev/null 2>&1
+  if typeset -p "$1" >/dev/null 2>&1
   then
     return 0
   else
