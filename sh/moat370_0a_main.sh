@@ -17,13 +17,15 @@
 #
 #************************************************************************
 
-set -euo pipefail
+set -eo pipefail
 
 if [ -z "${BASH_VERSION}" -o "${BASH}" = "/bin/sh" ]
 then
   >&2 echo "Script must be executed in BASH shell."
   exit 1
 fi
+
+set -u # This was moved here to avoid empty BASH_VERSION or BASH to fail.
 
 # Arguments
 v_parameters=("$@") 
