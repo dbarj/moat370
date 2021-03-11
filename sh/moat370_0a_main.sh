@@ -17,7 +17,8 @@
 #
 #************************************************************************
 
-set -eo pipefail
+# set -eo pipefail
+set -Eo pipefail
 
 if [ -z "${BASH_VERSION}" -o "${BASH}" = "/bin/sh" ]
 then
@@ -151,6 +152,8 @@ then
   echo ""
   unzip -l "${moat370_zip_filename}"
 fi
+
+[ -s "${moat370_error_file}" ] && echo_time "Check \"${moat370_error_file}\" for errors that happened during execution."
 
 echo "End ${moat370_sw_name}. Output: ${moat370_zip_filename}"
 

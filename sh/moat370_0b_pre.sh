@@ -59,6 +59,10 @@ fi
 ## Validate config file -> Must run after variables 1 and 2 are saved.
 source "${fc_check_config}"
 
+## Define error file.
+fc_def_output_file moat370_error_file 'error.txt'
+rm -f "${moat370_error_file}"
+
 ## Define full output folder path.
 moat370_sw_output_fdr_fpath="$(cd -P "${moat370_sw_output_fdr}"; pwd)"
 

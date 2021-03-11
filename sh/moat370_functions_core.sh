@@ -68,7 +68,14 @@ exit_error ()
 trap_error ()
 {
   # Trap any line that fails to run
-  exit_error "Error on line $1."
+  # echo_error "Error on line $1."
+  local err=$?
+  echo_error "Error in ${BASH_SOURCE[1]}:${BASH_LINENO[0]}. '${BASH_COMMAND}' exited with status $err"
+  fc_def_empty_var moat370_error_file
+  if [ -n "${moat370_error_file}" ]
+  then
+    echo "Error in ${BASH_SOURCE[1]}:${BASH_LINENO[0]}. '${BASH_COMMAND}' exited with status $err" >> "${moat370_error_file}"
+  fi
 }
 
 bin_check_exit ()

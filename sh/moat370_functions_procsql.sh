@@ -419,7 +419,7 @@ fc_proc_one_csv ()
   total_hours="Topic execution time: $(convert_secs $(do_calc 'get_time_t1-get_time_t0'))."
 
   ## update log2
-  echo "$(date "${moat370_date_format}"), $(let $get_time_t1-$get_time_t0)s, rows: ${row_num}, ${section_id}, ${main_table}, ${moat370_prev_sql_id}, ${moat370_prev_child_number}, ${title_no_spaces}, csv, ${one_spool_fullpath_filename}" >> "${moat370_log2}"
+  echo "$(date "${moat370_date_format}"), $(do_calc 'get_time_t1-get_time_t0')s, rows: ${row_num}, ${section_id}, ${main_table}, ${moat370_prev_sql_id}, ${moat370_prev_child_number}, ${title_no_spaces}, csv, ${one_spool_fullpath_filename}" >> "${moat370_log2}"
 
   fc_zip_file "${moat370_zip_filename}" "${one_spool_fullpath_filename}"
 
@@ -506,7 +506,7 @@ fc_proc_one_text_file ()
   ## update log2
   fc_def_empty_var moat370_prev_sql_id
   fc_def_empty_var moat370_prev_child_number
-  echo "$(date "${moat370_date_format}"), $(let $get_time_t1-$get_time_t0)s, rows: ${row_num}, ${section_id}, ${main_table}, ${moat370_prev_sql_id}, ${moat370_prev_child_number}, ${title_no_spaces}, txt, ${one_spool_fullpath_filename}" >> "${moat370_log2}"
+  echo "$(date "${moat370_date_format}"), $(do_calc 'get_time_t1-get_time_t0')s, rows: ${row_num}, ${section_id}, ${main_table}, ${moat370_prev_sql_id}, ${moat370_prev_child_number}, ${title_no_spaces}, txt, ${one_spool_fullpath_filename}" >> "${moat370_log2}"
 
   if [ "${one_spool_text_file_rename}" = 'Y' ]
   then
@@ -667,7 +667,7 @@ fc_html_topic_end ()
   ## update log2
   fc_def_empty_var moat370_prev_sql_id
   fc_def_empty_var moat370_prev_child_number
-  echo "$(date "${moat370_date_format}"), $(let $get_time_t1-$get_time_t0)s, rows: ${row_num}, ${section_id}, ${main_table}, ${moat370_prev_sql_id}, ${moat370_prev_child_number}, ${title_no_spaces}, ${in_param2} , ${one_spool_fullpath_filename}" >> "${moat370_log2}"
+  echo "$(date "${moat370_date_format}"), $(do_calc 'get_time_t1-get_time_t0')s, rows: ${row_num}, ${section_id}, ${main_table}, ${moat370_prev_sql_id}, ${moat370_prev_child_number}, ${title_no_spaces}, ${in_param2} , ${one_spool_fullpath_filename}" >> "${moat370_log2}"
 
 }
 
