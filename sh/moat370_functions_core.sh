@@ -798,7 +798,7 @@ fc_is_set_control_enabled ()
   local v_set
   #v_set=$(printf %s\\n "$-")
   v_set=$(printf %s "$-")
-  if grep -q "$2" <<< "${v_set}"
+  if grep -q "$1" <<< "${v_set}"
   then
     echo "true"
   else
