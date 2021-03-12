@@ -26,7 +26,7 @@ fc_gen_select_star_query ()
 
   set +u
   local in_order_by="$3"
-  set -u
+  fc_enable_set_u
 
   fc_set_value_var_nvl in_order_by "${in_order_by}" '1, 2'
 
@@ -619,7 +619,7 @@ fc_html_topic_end ()
   set +u
   local in_param3="$3"
   local in_param4="$4"
-  set -u
+  fc_enable_set_u
 
   fc_set_value_var_nvl 'in_param3' "${in_param3}" 'Y'
   fc_set_value_var_nvl 'in_param4' "${in_param4}" 'Y'

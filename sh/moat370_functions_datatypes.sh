@@ -49,7 +49,7 @@ trim_var ()
 
   set +u
   local in_char="$2"
-  set -u
+  fc_enable_set_u
   [ -z "${in_char}" ] && in_char=" "
 
   sed "s/^${in_char}*//g ; s/${in_char}*$//g" <<< "$1"
@@ -138,7 +138,7 @@ instr_var ()
 
   set +u
   [ "$3" != "" ] && v_occur="$3" || v_occur=1
-  set -u
+  fc_enable_set_u
 
   v_sstr=$(sed 's/[]\.|$(){}?+*^]/\\\\&/g' <<< "$2")
   $cmd_awk -v sstr="$v_sstr" -v occur="$v_occur" \

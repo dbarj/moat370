@@ -48,7 +48,7 @@ save_bash_variables ()
   fc_def_empty_var moat370_sw_output_fdr
   if [ -n "${moat370_sw_output_fdr}" ] && \
      [ -w "${moat370_sw_output_fdr}" ] && \
-     $(fc_is_debug_enabled)
+     ${moat370_code_set_x}
   then
     fc_def_output_file last_run_vars 'last_run_vars.env'
     ( set -o posix ; set ) > "${last_run_vars}"
@@ -175,7 +175,7 @@ fc_validate_variable ()
 
   set +u
   local in_custom="$3"
-  set -u
+  fc_enable_set_u
 
   eval in_param_content=\$${in_param}
 
@@ -303,7 +303,7 @@ fc_clean_file_name ()
 
   set +u
   type_param="$3"
-  set -u
+  fc_enable_set_u
 
   eval in_param_content=\$${in_param}
 
@@ -419,19 +419,14 @@ fc_reset_defaults ()
 fc_wait_string ()
 {
   local v_loop_limit v_sleep_time v_total_sleep
-  local v_string v_file v_chk
+  local v_string v_file
   v_file="$1"
   v_string="$2"
   v_loop_limit=5000
   v_sleep_time=0.01
   v_total_sleep=0
 
-  v_chk=$(fc_is_debug_enabled)
-
-  if ${v_chk}
-  then
-    set +x
-  fi
+  set +x
 
   while :
   do
@@ -448,10 +443,7 @@ fc_wait_string ()
     fi
   done
 
-  if ${v_chk}
-  then
-    set -x
-  fi
+  fc_enable_set_x
 
 }
 
@@ -476,7 +468,7 @@ fc_load_column ()
     
     set +u
     eval v_skip="${v_csv_4}\${${moat370_sw_name}_${v_csv_1}}"
-    set -u
+    fc_enable_set_u
 
     if [ -z ${v_skip} ]
     then
@@ -498,18 +490,6 @@ fc_load_column ()
   unset moat370_cur_col_id moat370_sections_file moat370_column_print
 }
 
-fc_is_debug_enabled ()
-{
-  local v_chk v_set
-  v_set=$(printf %s\\n "$-")
-  if grep -q 'x' <<< "${v_set}"
-  then
-    echo "true"
-  else
-    echo "false"
-  fi
-}
-
 fc_encode_html ()
 {
   ## Parameter 1 : HTML file to be encrypted
@@ -519,7 +499,7 @@ fc_encode_html ()
 
   set +u
   local in_custom="$2"
-  set -u
+  fc_enable_set_u
 
   if [ -z "${in_custom}" ]
   then
@@ -643,7 +623,7 @@ fc_zip_file ()
   set +u
   local v_move="$3"
   local v_relative="$4"
-  set -u
+  fc_enable_set_u
 
   [ ! -f "${v_src}" ] && return
 
@@ -813,32 +793,45 @@ fc_escape_markup_characters ()
   $cmd_sed 's|\&|\&amp;|g; s|>|\&gt;|g; s|<|\&lt;|g' "$1"
 }
 
+fc_is_set_control_enabled ()
+{
+  local v_set
+  #v_set=$(printf %s\\n "$-")
+  v_set=$(printf %s "$-")
+  if grep -q "$2" <<< "${v_set}"
+  then
+    echo "true"
+  else
+    echo "false"
+  fi
+}
+
 fc_disable_all_sets ()
 {
   set +u
-  set +e
   set +x
 }
 
 fc_enable_all_sets ()
 {
-  set -u
-  set -eo pipefail
-  if $1
+  fc_enable_set_u
+  fc_enable_set_x
+}
+
+fc_enable_set_x ()
+{
+  if ${moat370_code_set_x}
   then
     set -x
   fi
 }
 
-fc_ignore_error ()
+fc_enable_set_u ()
 {
-  set +e
-}
-
-
-fc_stop_on_error ()
-{
-  set -eo pipefail
+  if ${moat370_code_set_u}
+  then
+    set -u
+  fi
 }
 
 #### END OF FILE ####

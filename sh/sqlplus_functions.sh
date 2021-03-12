@@ -70,12 +70,7 @@ fc_db_check_connection ()
 
   fc_run_query "SELECT 'I_AM_CONNECTED_' || COUNT(*) FROM DUAL;"
 
-  v_chk=$(fc_is_debug_enabled)
-
-  if ${v_chk}
-  then
-    set +x
-  fi
+  set +x
 
   while :
   do
@@ -92,10 +87,7 @@ fc_db_check_connection ()
     fi
   done
 
-  if ${v_chk}
-  then
-    set -x
-  fi
+  fc_enable_set_x
 
 }
 
@@ -257,7 +249,7 @@ fc_load_variable ()
 
   set +u
   v_load_target_name="$2"
-  set -u
+  fc_enable_set_u
 
   fc_def_output_file v_load_variable_file 'fc_load_variable.out'
   rm -f "${v_load_variable_file}"

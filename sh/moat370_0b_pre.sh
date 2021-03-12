@@ -17,6 +17,10 @@
 #
 #************************************************************************
 
+## Check what set controls are enabled in the code.
+moat370_code_set_x=$(fc_is_set_control_enabled 'x')
+moat370_code_set_u=$(fc_is_set_control_enabled 'u')
+
 ## Define current code version:
 source "${v_base_dir}"/cfg/version.cfg
 
@@ -35,7 +39,7 @@ in_main_param2="${v_parameters[1]}"
 in_main_param3="${v_parameters[2]}"
 in_main_param4="${v_parameters[3]}"
 in_main_param5="${v_parameters[4]}"
-set -u
+fc_enable_set_u
 
 ## Start Time - Do not move it to the beggining, b4 we must ensure we are connected.
 moat370_main_time0=$(get_secs)
