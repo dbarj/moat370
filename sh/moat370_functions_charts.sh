@@ -100,15 +100,17 @@ fc_proc_line_chart ()
     cp "${csv_spool_filename}" "${csv_spool_filename}.2"
   fi
   ${cmd_sed} '1d' "${csv_spool_filename}.2" > "${csv_spool_filename}.3"
+  
+  fc_remove_column_enclosure "${csv_spool_filename}.3" "${csv_spool_filename}.3" 1
 
   ${cmd_awk} '
-  { print "new Date("substr($0,2,4)"," \
-                      substr($0,7,2)-1"," \
-                      substr($0,10,2)"," \
-                      substr($0,13,2)"," \
-                      substr($0,16,2)"," \
-                      substr($0,19,2)")" \
-                      substr($0,22)}' "${csv_spool_filename}.3" > "${csv_spool_filename}.2"
+  { print "new Date("substr($0,1,4)"," \
+                      substr($0,6,2)-1"," \
+                      substr($0,9,2)"," \
+                      substr($0,12,2)"," \
+                      substr($0,15,2)"," \
+                      substr($0,18,2)")" \
+                      substr($0,20)}' "${csv_spool_filename}.3" > "${csv_spool_filename}.2"
 
   (echo "${l_line}" && cat "${csv_spool_filename}.2") > "${csv_spool_filename}.3"
 
@@ -190,8 +192,13 @@ fc_proc_pie_chart ()
 
   l_line='Slice,Value'
 
-  fc_csv_keep_until_column "${csv_spool_filename}" "${csv_spool_filename}.2" 3
-  fc_csv_remove_column "${csv_spool_filename}.2" "${csv_spool_filename}.2" 1 # row_number
+  if [ -z "${input_file}" ]
+  then
+    fc_csv_keep_until_column "${csv_spool_filename}" "${csv_spool_filename}.2" 3
+    fc_csv_remove_column "${csv_spool_filename}.2" "${csv_spool_filename}.2" 1 # row_number
+  else
+    cp "${csv_spool_filename}" "${csv_spool_filename}.2"
+  fi
 
   fc_enquote_column_single_quote "${csv_spool_filename}.2" "${csv_spool_filename}.2" 1
 
@@ -235,7 +242,12 @@ fc_proc_pie_chart ()
   [ -n "${foot}" ] && echo "1) ${foot}" >> "${one_spool_fullpath_filename}"
   [ -n "${foot}" ] && echo '</font>' >> "${one_spool_fullpath_filename}"
 
-  fc_html_topic_end "${one_spool_fullpath_filename}" pie '' ${sql_show}
+  fc_set_value_var_nvl2 exec_sql_print "${input_file}" 'N' 'Y'
+  fc_set_value_var_decode exec_sql_print "${sql_show}" 'N' 'N' "${exec_sql_print}"
+
+  fc_html_topic_end "${one_spool_fullpath_filename}" pie ${exec_sql_print} ${exec_sql_print}
+
+  unset exec_sql_print
 
   fc_encode_html "${one_spool_fullpath_filename}"
 
@@ -260,7 +272,7 @@ fc_proc_bar_chart ()
   fc_set_value_var_nvl 'bar_height' "${bar_height}" '65%'
 
   fc_def_empty_var bar_minperc
-  fc_set_value_var_nvl 'bar_minperc' "${bar_minperc}" '5'
+  fc_set_value_var_nvl 'bar_minperc' "${bar_minperc}" '0'
 
   ## Define options
   fc_def_empty_var chart_option
@@ -292,19 +304,29 @@ fc_proc_bar_chart ()
   local v_first_line=true
   l_others=100
   echo "['Bucket', 'Number of Rows', { role: 'style' }, { role: 'tooltip' }]" >> "${one_spool_fullpath_filename}"
+
+  if [ -z "${input_file}" ]
+  then
+    fc_csv_remove_column "${csv_spool_filename}" "${csv_spool_filename}.2" 1 # row_number
+  else
+    cp "${csv_spool_filename}" "${csv_spool_filename}.2"
+  fi
+
   while read v_line || [ -n "$v_line" ]
   do
     ${v_first_line} && v_first_line=false && continue
-    l_bar=$(${cmd_awk_csv} --source '{a=csv_parse_record($0, separator, enclosure, csv); print csv[1]}' <<< "$v_line")
-    l_value=$(${cmd_awk_csv} --source '{a=csv_parse_record($0, separator, enclosure, csv); print csv[2]}' <<< "$v_line")
-    l_style=$(${cmd_awk_csv} --source '{a=csv_parse_record($0, separator, enclosure, csv); print csv[3]}' <<< "$v_line")
-    l_tooltip=$(${cmd_awk_csv} --source '{a=csv_parse_record($0, separator, enclosure, csv); print csv[4]}' <<< "$v_line")
+    l_bar=$(${cmd_awk_csv} --source '{a=csv_parse_record($0, separator, enclosure, csv); print csv[0]}' <<< "$v_line")
+    l_value=$(${cmd_awk_csv} --source '{a=csv_parse_record($0, separator, enclosure, csv); print csv[1]}' <<< "$v_line")
+    l_style=$(${cmd_awk_csv} --source '{a=csv_parse_record($0, separator, enclosure, csv); print csv[2]}' <<< "$v_line")
+    l_tooltip=$(${cmd_awk_csv} --source '{a=csv_parse_record($0, separator, enclosure, csv); print csv[3]}' <<< "$v_line")
     if [ ${l_value} -ge ${bar_minperc} ]
     then
       echo ",['${l_bar}', ${l_value}, '${l_style}', '${l_tooltip}']" >> "${one_spool_fullpath_filename}"
       l_others=$(do_calc 'l_others-l_value')
     fi
-  done < "${csv_spool_filename}"
+  done < "${csv_spool_filename}.2"
+
+  rm -f "${csv_spool_filename}.2"
 
   l_bar="The rest (${l_others}%)"
   l_value=${l_others};
@@ -337,7 +359,12 @@ fc_proc_bar_chart ()
   [ -n "${foot}" ] && echo "<br>3) ${foot}" >> "${one_spool_fullpath_filename}"
   echo '</font>' >> "${one_spool_fullpath_filename}"
 
-  fc_html_topic_end "${one_spool_fullpath_filename}" bar '' ${sql_show}
+  fc_set_value_var_nvl2 exec_sql_print "${input_file}" 'N' 'Y'
+  fc_set_value_var_decode exec_sql_print "${sql_show}" 'N' 'N' "${exec_sql_print}"
+
+  fc_html_topic_end "${one_spool_fullpath_filename}" bar ${exec_sql_print} ${exec_sql_print}
+
+  unset exec_sql_print
 
   fc_encode_html "${one_spool_fullpath_filename}"
 
@@ -370,16 +397,26 @@ fc_proc_graphviz_chart ()
   # body
   local v_line l_node1 l_node2 l_attr
   local v_first_line=true
+
+  if [ -z "${input_file}" ]
+  then
+    fc_csv_remove_column "${csv_spool_filename}" "${csv_spool_filename}.2" 1 # row_number
+  else
+    cp "${csv_spool_filename}" "${csv_spool_filename}.2"
+  fi
+
   while read v_line || [ -n "$v_line" ]
   do
     ${v_first_line} && v_first_line=false && continue
-    l_node1=$(${cmd_awk_csv} --source '{a=csv_parse_record($0, separator, enclosure, csv); print csv[1]}' <<< "$v_line")
-    l_node2=$(${cmd_awk_csv} --source '{a=csv_parse_record($0, separator, enclosure, csv); print csv[2]}' <<< "$v_line")
-    l_attr=$(${cmd_awk_csv} --source '{a=csv_parse_record($0, separator, enclosure, csv); print csv[3]}' <<< "$v_line")
+    l_node1=$(${cmd_awk_csv} --source '{a=csv_parse_record($0, separator, enclosure, csv); print csv[0]}' <<< "$v_line")
+    l_node2=$(${cmd_awk_csv} --source '{a=csv_parse_record($0, separator, enclosure, csv); print csv[1]}' <<< "$v_line")
+    l_attr=$(${cmd_awk_csv} --source '{a=csv_parse_record($0, separator, enclosure, csv); print csv[2]}' <<< "$v_line")
     
     echo "'${l_node1} -> ${l_node2} ${l_attr};' +" >> "${one_spool_fullpath_filename}"
 
-  done < "${csv_spool_filename}"
+  done < "${csv_spool_filename}.2"
+
+  rm -f "${csv_spool_filename}.2"
 
   echo "    '}';" >> "${one_spool_fullpath_filename}"
   echo '    src = "https://chart.googleapis.com/chart?cht=gv&chs=720x400&chl="+dot' >> "${one_spool_fullpath_filename}"
@@ -391,7 +428,12 @@ fc_proc_graphviz_chart ()
   [ -n "${foot}" ] && echo "1) ${foot}" >> "${one_spool_fullpath_filename}"
   [ -n "${foot}" ] && echo '</font>' >> "${one_spool_fullpath_filename}"
 
-  fc_html_topic_end "${one_spool_fullpath_filename}" graph '' ${sql_show}
+  fc_set_value_var_nvl2 exec_sql_print "${input_file}" 'N' 'Y'
+  fc_set_value_var_decode exec_sql_print "${sql_show}" 'N' 'N' "${exec_sql_print}"
+
+  fc_html_topic_end "${one_spool_fullpath_filename}" graph ${exec_sql_print} ${exec_sql_print}
+
+  unset exec_sql_print
 
   fc_encode_html "${one_spool_fullpath_filename}"
 

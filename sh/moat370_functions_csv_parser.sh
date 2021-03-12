@@ -213,3 +213,32 @@ fc_enquote_column_single_quote ()
   mv "${v_outfile}.2" "${v_outfile}"
   #####
 }
+
+fc_remove_column_enclosure ()
+{
+  # This code will remove the enclosure for the given column, if it has one.
+  if [ $# -ne 3 ]
+  then
+    echo_error "$0: Three arguments are needed.. given: $#"
+    return 1
+  fi
+
+  local v_infile="$1"
+  local v_outfile="$2"
+  local v_col_rem_enclosure="$3"
+  ###
+
+  # Other scripts depends on this file created
+  touch "${v_outfile}"
+
+  if [ ! -s "${v_infile}" ]
+  then
+    echo_error "${v_infile} is zero sized."
+    return 1
+  fi
+
+  # "${v_outfile}.2" is used in case input and output are the same.
+  ${cmd_awk_csv} --source '{csv_print_rem_enclosure_field($0, separator, enclosure, '${v_col_rem_enclosure}')}' "${v_infile}" > "${v_outfile}.2"
+  mv "${v_outfile}.2" "${v_outfile}"
+  #####
+}

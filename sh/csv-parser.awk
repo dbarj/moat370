@@ -258,8 +258,7 @@ function csv_print_skip_field_record (record, separator, quote, skip_field) {
     return num_fields
 }
 
-
-## Replace values of field_pos by the value "rep_value".
+## Add enquote in field given in parameter
 function csv_print_enquote_field (record, separator, quote, field_pos, enquote) {
     field_pos--
     num_fields=csv_parse_record(record, separator, quote, csv)
@@ -274,5 +273,26 @@ function csv_print_enquote_field (record, separator, quote, field_pos, enquote) 
         output=output print_value
     }
     print output
+    return num_fields
+}
+
+## Remove enclosure from field given in parameter
+function csv_print_rem_enclosure_field (record, separator, quote, field) {
+    field--
+    num_fields=csv_parse_record_asis(record, separator, quote, csv)
+    num_fields_2=csv_parse_record(record, separator, quote, csv_2)
+    output=""
+    for (i=0; i<num_fields; i++) {
+        if (i != field)
+        {
+            print_value=csv[i]
+        } else {
+            print_value=csv_2[i]
+        }
+        if (i != 0) output=output separator
+        output=output print_value
+    }
+    print output
+    num_fields--
     return num_fields
 }
