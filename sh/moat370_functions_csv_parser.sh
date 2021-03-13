@@ -188,6 +188,7 @@ fc_csv_remove_column ()
 fc_enquote_column_single_quote ()
 {
   # This code will add single quotes to the given column.
+  # This function will also remove all the default quotes from the columns.
   if [ $# -ne 3 ]
   then
     echo_error "$0: Three arguments are needed.. given: $#"

@@ -24,6 +24,7 @@ fc_proc_line_chart ()
   local one_spool_fullpath_filename
 
   [ ! -f "${csv_spool_filename}" ] && echo_error "Can't run fc_proc_line_chart with provided inputs." && return
+  [ ! -s "${csv_spool_filename}" ] && echo_time "CSV input is empty." && return
 
   fc_seq_output_file one_spool_filename
   fc_def_output_file one_spool_fullpath_filename "${one_spool_filename}_line_chart.html"
@@ -174,6 +175,7 @@ fc_proc_pie_chart ()
   local one_spool_fullpath_filename
 
   [ ! -f "${csv_spool_filename}" ] && echo_error "Can't run fc_proc_pie_chart with provided inputs." && return
+  [ ! -s "${csv_spool_filename}" ] && echo_time "CSV input is empty." && return
 
   fc_seq_output_file one_spool_filename
   fc_def_output_file one_spool_fullpath_filename "${one_spool_filename}_pie_chart.html"
@@ -262,7 +264,8 @@ fc_proc_bar_chart ()
   local one_spool_filename="${spool_filename}"
   local one_spool_fullpath_filename
 
-  [ ! -f "${csv_spool_filename}" ] && echo_error "Can't run fc_proc_pie_chart with provided inputs." && return
+  [ ! -f "${csv_spool_filename}" ] && echo_error "Can't run fc_proc_bar_chart with provided inputs." && return
+  [ ! -s "${csv_spool_filename}" ] && echo_time "CSV input is empty." && return
 
   fc_seq_output_file one_spool_filename
   fc_def_output_file one_spool_fullpath_filename "${one_spool_filename}_bar_chart.html"
@@ -384,6 +387,7 @@ fc_proc_graphviz_chart ()
   fc_def_output_file one_spool_fullpath_filename "${one_spool_filename}_graph_chart.html"
   
   [ ! -f "${csv_spool_filename}" ] && echo_error "Can't run fc_proc_graphviz_chart with provided inputs." && return
+  [ ! -s "${csv_spool_filename}" ] && echo_time "CSV input is empty." && return
 
   fc_html_topic_intro "${one_spool_filename}_graph_chart.html" graph
   

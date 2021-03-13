@@ -237,7 +237,7 @@ fc_exec_item ()
       fc_db_check_file_sql_error "${csv_spool_filename}"
       then
         row_num=$(wc -l < "${csv_spool_filename}" | tr -d '[:space:]')
-        row_num=$(do_calc 'row_num-1') # Remove Header.
+        [ $row_num -ne 0 ] && row_num=$(do_calc 'row_num-1') # Remove Header when there is something.
         ## If row_num is 0, return 0, otherwise subtract row_num_dif giving nothing less than a -1 result.
         if [ $row_num -ne 0 ]
         then
@@ -688,7 +688,8 @@ fc_add_tablefilter ()
   fc_set_value_var_nvl 'filtertab_option4' "${filtertab_option4}" "auto_filter: true, extensions:[{ name: 'sort' }]"
 
   ## Add <thead> to first row so column sort can work.
-  fc_add_thead_tag_html "${in_html_src_file}"
+  fc_add_thead_tag_html "${in_html_src_file}" && ret=$? || ret=$?
+  [ $ret -ne 0 ] && return 0 # If it fails to add the thead (maybe no header?), stop here.
 
   ## Filter TABLE
 
