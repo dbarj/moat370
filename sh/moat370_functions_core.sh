@@ -391,7 +391,7 @@ fc_reset_defaults ()
   sql_show="${moat370_def_sql_show}"
   ##
   skip_table="${moat370_def_skip_html}"
-  skip_text="${moat370_def_skip_text}"
+  #skip_text="${moat370_def_skip_text}"
   skip_csv="${moat370_def_skip_csv}"
   skip_line="${moat370_def_skip_line}"
   skip_pie="${moat370_def_skip_pie}"

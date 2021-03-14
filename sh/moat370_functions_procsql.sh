@@ -689,7 +689,7 @@ fc_add_tablefilter ()
 
   ## Add <thead> to first row so column sort can work.
   fc_add_thead_tag_html "${in_html_src_file}" && ret=$? || ret=$?
-  [ $ret -ne 0 ] && return 0 # If it fails to add the thead (maybe no header?), stop here.
+  [ $ret -ne 0 ] && return 0 # If it fails to add the thead (maybe no rows = no header), stop here.
 
   ## Filter TABLE
 

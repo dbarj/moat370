@@ -415,6 +415,8 @@ fc_proc_graphviz_chart ()
     l_node1=$(${cmd_awk_csv} --source '{a=csv_parse_record($0, separator, enclosure, csv); print csv[0]}' <<< "$v_line")
     l_node2=$(${cmd_awk_csv} --source '{a=csv_parse_record($0, separator, enclosure, csv); print csv[1]}' <<< "$v_line")
     l_attr=$(${cmd_awk_csv} --source '{a=csv_parse_record($0, separator, enclosure, csv); print csv[2]}' <<< "$v_line")
+    fc_clean_file_name l_node1 l_node1
+    fc_clean_file_name l_node2 l_node2
     
     echo "'${l_node1} -> ${l_node2} ${l_attr};' +" >> "${one_spool_fullpath_filename}"
 

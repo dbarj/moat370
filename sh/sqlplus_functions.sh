@@ -48,7 +48,7 @@ fc_db_startup_connection ()
   mkfifo "${v_database_fifo_file}"
   exec 3<>"${v_database_fifo_file}"
   fc_def_output_file v_database_out_file 'database_output.log'
-  cat <&3 | sqlplus ${moat370_sw_db_conn_params} > "${v_database_out_file}" &
+  cat <&3 | sqlplus /nolog > "${v_database_out_file}" &
   v_db_client_pid=$!
 }
 
@@ -68,6 +68,7 @@ fc_db_check_connection ()
   v_sleep_time=1
   v_total_sleep=0
 
+  fc_run_query "conn ${moat370_sw_db_conn_params}"
   fc_run_query "SELECT 'I_AM_CONNECTED_' || COUNT(*) FROM DUAL;"
 
   set +x

@@ -31,6 +31,7 @@
 # fc_db_reset_options
 # fc_db_pre_section_call
 # fc_db_create_csv
+# fc_db_create_raw
 # fc_db_table_description
 # fc_db_check_file_sql_error
 # fc_db_enable_trace
@@ -51,9 +52,12 @@ fc_db_startup_connection ()
   fc_def_output_file v_database_out_file 'database_output.log'
   fc_disable_all_sets
   #cat <&3 | sql -L ${moat370_sw_db_conn_params} > "${v_database_out_file}" &
-  tail -f "${v_database_fifo_file}" | sql -L ${moat370_sw_db_conn_params} > "${v_database_out_file}" &
+  local old_tty_settings=`stty -g`
+  tail -f "${v_database_fifo_file}" | sql /nolog > "${v_database_out_file}" &
   v_db_client_pid=$!
-  sleep 10 # sqlcl will run the first entry in pipe and leave if remove this.
+  sleep 10 # sqlcl will run the first entry in pipe and leave if I remove this.
+  #stty sane 
+  stty "$old_tty_settings" # sqlcl destroy all the stty default options. stty sane will restore it.
   fc_enable_all_sets
 }
 
@@ -73,6 +77,7 @@ fc_db_check_connection ()
   v_sleep_time=1
   v_total_sleep=0
 
+  fc_run_query "conn ${moat370_sw_db_conn_params}"
   fc_run_query "SELECT 'I_AM_CONNECTED_' || COUNT(*) FROM DUAL;"
 
   set +x
@@ -144,13 +149,33 @@ fc_db_create_csv ()
   fc_run_query "@${v_base_dir}/database/oracle/sqlcl_run_html.sql ${v_in_file} ${v_out_html}"
   fc_check_executed
   fc_convert_html_to_csv "${v_out_html}" "${v_out_csv}"
-  exit 0
-  #rm -f "${v_out_html}"
+  rm -f "${v_out_html}"
   unset v_out_html
 
   # Trim trailing blank lines
   $cmd_sed -e ':a' -e '/./,$!d;/^\n*$/{$d;N;};/\n$/ba' "${v_out_csv}" > "${v_out_csv}".tmp
   mv "${v_out_csv}".tmp "${v_out_csv}"
+
+  fc_load_variable MOAT370_PREV_SQL_ID moat370_prev_sql_id
+  fc_load_variable MOAT370_PREV_CHILD_NUMBER moat370_prev_child_number
+
+  fc_db_reset_options
+}
+
+fc_db_create_raw ()
+{
+  local v_in_file="$1"
+  local v_out_file="$2"
+
+  fc_def_output_file v_out_raw 'fc_db_create_raw.out'
+  rm -f "${v_out_raw}"
+
+  fc_run_query "@${v_base_dir}/database/oracle/oracle_run_raw.sql ${v_in_file} ${v_out_raw}"
+  fc_check_executed
+  $cmd_sed -e ':a' -e '/./,$!d;/^\n*$/{$d;N;};/\n$/ba' "${v_out_raw}" > "${v_out_file}"
+
+  rm -f "${v_out_raw}"
+  unset v_out_raw
 
   fc_load_variable MOAT370_PREV_SQL_ID moat370_prev_sql_id
   fc_load_variable MOAT370_PREV_CHILD_NUMBER moat370_prev_child_number
@@ -269,7 +294,7 @@ fc_load_variable ()
       v_def_var=$(sed 's/^DEFINE *\([^ ]*\) .*/\1/' <<< "${line}")
       v_def_var=$(lower_var "${v_def_var}")
 
-      v_value_var=$(sed 's/^[^"]*"\(.*\)"[^"]*$/\1/' <<< "${line}")
+      v_value_var=$(sed 's/^[^=]*= *//; s/ *([^(]*$//; s/^"//; s/"$//' <<< "${line}")
       
       if [ "${v_def_var}" = "1" ] || [ "${v_def_var}" = "2" ] || [ "$(substr_var ${v_def_var} 1 1)" = "_" ]
       then
@@ -313,16 +338,22 @@ fc_convert_html_to_csv ()
   cat "${v_in_file}" | \
   # Remove all lines before <table> entry
   $cmd_sed '1,/^<div>/d' | \
-  # Trim line, replace double the double quotes and enclose line with double quotes
-  $cmd_sed 's/^[[:space:]]*//g; s/[[:space:]]*$//g; s/^&nbsp;$//; s/"/""/g; /^</!s/^/"/; /^</!s/$/"/; s/^""$//' | \
+  # Remove all lines after </table> entry
+  $cmd_sed '/<\/table>/q' | \
+  # Add a New line after <tr>
+  $cmd_sed $'s:<tr>:\\\n:g' | \
+  # Trim line, replace double the double quotes and remove empty lines. 
+  $cmd_sed 's/^[[:space:]]*//g; s/[[:space:]]*$//g; s/&nbsp;//; s/"/""/g; /^$/d' | \
   # Replace new lines with form feed character
   tr '\n' '\f' | \
   # Remove linebreaks from csv fields
-  $cmd_sed $'s:"\f": :g' | \
-  # Replace HTML columns end/start with ','
-  $cmd_sed $'s:\f</th>\f<th[^\f]*\f:,:g ; s:\f</td>\f<td[^\f]*\f:,:g' | \
+  $cmd_sed $'s/\f\([^<]\)/ \\1/g' | \
+  # Replace HTML columns end/start with '","'
+  $cmd_sed $'s:</th>\f<th[^>]*>:",":g ; s:</td>\f<td[^>]*>:",":g' | \
+  # Replace HTML line end/start with '"'
+  $cmd_sed $'s:<th[^>]*>:":g ; s:</th>:":g ; s:<td[^>]*>:":g ; s:</td>:":g' | \
   # Replace form feed character back to new lines
   tr '\f' '\n' | \
-  # Remove any other HTML line.
+  # Remove any other HTML line and empty lines.
   $cmd_sed '/^</d' > "${v_out_file}"
 }

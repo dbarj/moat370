@@ -9,7 +9,7 @@ SET SQLFORMAT HTML
 SPO &2.
 /
 SPO OFF
-SET MARK HTML OFF
+SET SQLFORMAT DEFAULT
 
 SELECT prev_sql_id moat370_prev_sql_id,
        prev_child_number moat370_prev_child_number
