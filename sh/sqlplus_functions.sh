@@ -36,6 +36,7 @@
 # fc_db_check_file_sql_error
 # fc_db_enable_trace
 # fc_db_pre_exec_call
+# fc_db_sql_transform
 
 # printf %s\\n "$-"
 bin_check_exit sqlplus
@@ -118,6 +119,7 @@ fc_db_define_module ()
 
 fc_db_reset_options ()
 {
+  sql_text_cdb=''
   fc_db_run_file "${v_base_dir}"/database/oracle/oracle_reset.sql
 }
 
@@ -217,6 +219,14 @@ fc_db_pre_exec_call ()
 
   sql_with_clause=$(trim_var "${sql_with_clause}")
   sql_with_clause=$($cmd_sed -e :a -e '/./,$!d;/^\n*$/{$d;N;};/\n$/ba' <<< "${sql_with_clause}")
+}
+
+fc_db_sql_transform ()
+{
+  local v_in_query="$1"
+  local v_extra_with_clause=''
+  [ -n "${sql_with_clause}" ] && v_extra_with_clause="$(printf '%s\n' "${sql_with_clause}")"
+  printf '%sSELECT TO_CHAR(ROWNUM) row_num, v0.* FROM /* %s */ (\n%s\n) v0 WHERE ROWNUM <= %s' "${v_extra_with_clause}" "${section_id}.${report_sequence}" "${v_in_query}" "${max_rows}"
 }
 
 ################################

@@ -53,7 +53,7 @@ then
   cp -av ${moat370_fdr_js}/tablefilter "${moat370_sw_output_fdr}/" >> "${moat370_log3}"
   cd "${moat370_sw_output_fdr}/"
   zip -rm $(cd - >/dev/null; cd "${v_zipfdr}"; pwd)/${moat370_zip_filename_nopath} tablefilter/ >> "${moat370_log3_nopath}"
-  cd -
+  cd - >/dev/null
 fi 
 ## Fix above cmd as cur folder can be RO
 

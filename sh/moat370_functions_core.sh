@@ -376,7 +376,6 @@ fc_reset_defaults ()
 {
   ## Reset variables and defs used by each item.
   sql_text=''
-  sql_text_cdb=''
   sql_text_display=''
   sql_with_clause=''
   input_file=''
@@ -457,12 +456,12 @@ fc_load_column ()
   ## The variable below will be changed to YES if the code ever enter in 9a
   moat370_column_print='NO'
   
-  v_list=$(${cmd_grep} -e "^${moat370_cur_col_id}" ${moat370_sections_file} | ${cmd_awk} -F',' '{print $1}')
+  v_list=$(${cmd_grep} -e "^${moat370_cur_col_id}" ${moat370_sections_file} | ${cmd_awk} -F',' '{print $2}')
 
-  for v_csv_1 in ${v_list}
+  for v_csv_2 in ${v_list}
   do
-    v_line=$(${cmd_grep} -e "^${v_csv_1}," ${moat370_sections_file})
-    v_csv_2=$(${cmd_awk} -F',' '{print $2}' <<< "${v_line}")
+    v_line=$(${cmd_grep} -e ",${v_csv_2}," ${moat370_sections_file})
+    v_csv_1=$(${cmd_awk} -F',' '{print $1}' <<< "${v_line}")
     v_csv_3=$(${cmd_awk} -F',' '{print $3}' <<< "${v_line}")
     v_csv_4=$(${cmd_awk} -F',' '{print $4}' <<< "${v_line}")
     
@@ -472,7 +471,7 @@ fc_load_column ()
 
     if [ -z ${v_skip} ]
     then
-      fc_call_section "${v_csv_1}" "${moat370_sw_name}_${v_csv_1}_${v_csv_2}" "${v_csv_3}"
+      fc_call_section "${v_csv_1}" "${v_csv_2}" "${v_csv_3}"
     fi
   done
 

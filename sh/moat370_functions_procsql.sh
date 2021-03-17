@@ -204,11 +204,7 @@ fc_exec_item ()
   ## spools query
   if ${input_csv_mode} && [ -n "${sql_text}" ]
   then
-    v_cmd=''
-    [ -n "${sql_with_clause}" ] && v_cmd="$(printf '%s\n' "${sql_with_clause}")"
-    v_cmd="$(printf '%sSELECT TO_CHAR(ROWNUM) row_num, v0.* FROM /* %s */ (\n%s\n) v0 WHERE ROWNUM <= %s' "${v_cmd}" "${section_id}.${report_sequence}" "${sql_text}" "${max_rows}")"
-    #v_cmd="${v_cmd}SELECT TO_CHAR(ROWNUM) row_num, v0.* FROM /* ${section_id}.${report_sequence} */ (\n${sql_text} \n) v0 WHERE ROWNUM <= ${max_rows}"
-    echo "$v_cmd" > "${moat370_query}"
+    fc_db_sql_transform "${sql_text}" > "${moat370_query}"
   elif ${input_raw_mode} && [ -n "${sql_text}" ]
   then
     echo "${sql_text}" > "${moat370_query}"
@@ -419,6 +415,8 @@ fc_proc_one_csv ()
   total_hours="Topic execution time: $(convert_secs $(do_calc 'get_time_t1-get_time_t0'))."
 
   ## update log2
+  fc_def_empty_var moat370_prev_sql_id
+  fc_def_empty_var moat370_prev_child_number
   echo "$(date "${moat370_date_format}"), $(do_calc 'get_time_t1-get_time_t0')s, rows: ${row_num}, ${section_id}, ${main_table}, ${moat370_prev_sql_id}, ${moat370_prev_child_number}, ${title_no_spaces}, csv, ${one_spool_fullpath_filename}" >> "${moat370_log2}"
 
   fc_zip_file "${moat370_zip_filename}" "${one_spool_fullpath_filename}"
