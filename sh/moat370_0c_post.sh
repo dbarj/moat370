@@ -23,7 +23,7 @@ moat370_main_time1=$(get_secs)
 total_hours="Tool execution time: $(convert_secs $(do_calc 'moat370_main_time1-moat370_main_time0'))."
 
 moat370_time_stamp=$(date "${moat370_date_format}")
-fc_paste_file_replacing_variables "${v_base_dir}"/cfg/moat370_html_footer.html "${moat370_main_report}"
+fc_paste_file_replacing_variables "${moat370_fdr_cfg}"/moat370_html_footer.html "${moat370_main_report}"
 
 fc_encode_html "${moat370_main_report}" 'INDEX'
 

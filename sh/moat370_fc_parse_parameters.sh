@@ -22,22 +22,22 @@
 
 v_msg='When a parameter is defined, all prior parameters must be defined.'
 
-if [ "${moat370_sw_param2}" != 'null' ] && [ "${moat370_sw_param1}" = 'null' ]
+if [ "${moat370_sw_param2}" != 'unset' ] && [ "${moat370_sw_param1}" = 'unset' ]
 then
   exit_error ${v_msg}
 fi
 
-if [ "${moat370_sw_param3}" != 'null' ] && [ "${moat370_sw_param1}" = 'null' -o "${moat370_sw_param2}" = 'null' ]
+if [ "${moat370_sw_param3}" != 'unset' ] && [ "${moat370_sw_param1}" = 'unset' -o "${moat370_sw_param2}" = 'unset' ]
 then
   exit_error ${v_msg}
 fi
 
-if [ "${moat370_sw_param4}" != 'null' ] && [ "${moat370_sw_param1}" = 'null' -o "${moat370_sw_param2}" = 'null' -o "${moat370_sw_param3}" = 'null' ]
+if [ "${moat370_sw_param4}" != 'unset' ] && [ "${moat370_sw_param1}" = 'unset' -o "${moat370_sw_param2}" = 'unset' -o "${moat370_sw_param3}" = 'unset' ]
 then
   exit_error ${v_msg}
 fi
 
-if [ "${moat370_sw_param5}" != 'null' ] && [ "${moat370_sw_param1}" = 'null' -o "${moat370_sw_param2}" = 'null' -o "${moat370_sw_param3}" = 'null' -o "${moat370_sw_param4}" = 'null' ]
+if [ "${moat370_sw_param5}" != 'unset' ] && [ "${moat370_sw_param1}" = 'unset' -o "${moat370_sw_param2}" = 'unset' -o "${moat370_sw_param3}" = 'unset' -o "${moat370_sw_param4}" = 'unset' ]
 then
   exit_error ${v_msg}
 fi
@@ -155,4 +155,5 @@ then
   eval ${moat370_sw_param5_var}=\${moat370_param5}
 fi
 
+unset v_p1_check v_p2_check v_p3_check v_p4_check v_p5_check
 unset moat370_param1 moat370_param2 moat370_param3 moat370_param4 moat370_param5

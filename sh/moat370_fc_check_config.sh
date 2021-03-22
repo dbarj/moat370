@@ -91,16 +91,16 @@ fc_def_empty_var moat370_sw_param4_var
 fc_def_empty_var moat370_sw_param5_var
 
 fc_set_value_var_nvl 'moat370_sw_param1' "${moat370_sw_param1}" 'section'
-fc_set_value_var_nvl 'moat370_sw_param2' "${moat370_sw_param2}" 'null'
-fc_set_value_var_nvl 'moat370_sw_param3' "${moat370_sw_param3}" 'null'
-fc_set_value_var_nvl 'moat370_sw_param4' "${moat370_sw_param4}" 'null'
-fc_set_value_var_nvl 'moat370_sw_param5' "${moat370_sw_param5}" 'null'
+fc_set_value_var_nvl 'moat370_sw_param2' "${moat370_sw_param2}" 'unset'
+fc_set_value_var_nvl 'moat370_sw_param3' "${moat370_sw_param3}" 'unset'
+fc_set_value_var_nvl 'moat370_sw_param4' "${moat370_sw_param4}" 'unset'
+fc_set_value_var_nvl 'moat370_sw_param5' "${moat370_sw_param5}" 'unset'
 
-fc_validate_variable moat370_sw_param1 RANGE 'license,section,custom,null'
-fc_validate_variable moat370_sw_param2 RANGE 'license,section,custom,null'
-fc_validate_variable moat370_sw_param3 RANGE 'license,section,custom,null'
-fc_validate_variable moat370_sw_param4 RANGE 'license,section,custom,null'
-fc_validate_variable moat370_sw_param5 RANGE 'license,section,custom,null'
+fc_validate_variable moat370_sw_param1 RANGE 'license,section,custom,unset'
+fc_validate_variable moat370_sw_param2 RANGE 'license,section,custom,unset'
+fc_validate_variable moat370_sw_param3 RANGE 'license,section,custom,unset'
+fc_validate_variable moat370_sw_param4 RANGE 'license,section,custom,unset'
+fc_validate_variable moat370_sw_param5 RANGE 'license,section,custom,unset'
 
 ##-------------------------
 
@@ -126,8 +126,7 @@ fc_validate_variable moat370_conf_compress_html  ON_OFF
 
 ##-------------------------
 
-fc_def_empty_var moat370_conf_incl_html
-fc_def_empty_var moat370_conf_incl_text
+fc_def_empty_var moat370_conf_incl_table
 fc_def_empty_var moat370_conf_incl_csv
 fc_def_empty_var moat370_conf_incl_line
 fc_def_empty_var moat370_conf_incl_pie
@@ -135,21 +134,21 @@ fc_def_empty_var moat370_conf_incl_bar
 fc_def_empty_var moat370_conf_incl_graph
 fc_def_empty_var moat370_conf_incl_map
 fc_def_empty_var moat370_conf_incl_treemap
-fc_def_empty_var moat370_conf_incl_file
+fc_def_empty_var moat370_conf_incl_text
+fc_def_empty_var moat370_conf_incl_html
 
-fc_set_value_var_nvl 'moat370_conf_incl_html'    "${moat370_conf_incl_html}"    'Y'
-fc_set_value_var_nvl 'moat370_conf_incl_text'    "${moat370_conf_incl_text}"    'N'
-fc_set_value_var_nvl 'moat370_conf_incl_csv'     "${moat370_conf_incl_csv}"     'N'
+fc_set_value_var_nvl 'moat370_conf_incl_table'   "${moat370_conf_incl_table}"   'Y'
+fc_set_value_var_nvl 'moat370_conf_incl_csv'     "${moat370_conf_incl_csv}"     'Y'
 fc_set_value_var_nvl 'moat370_conf_incl_line'    "${moat370_conf_incl_line}"    'Y'
 fc_set_value_var_nvl 'moat370_conf_incl_pie'     "${moat370_conf_incl_pie}"     'Y'
 fc_set_value_var_nvl 'moat370_conf_incl_bar'     "${moat370_conf_incl_bar}"     'Y'
 fc_set_value_var_nvl 'moat370_conf_incl_graph'   "${moat370_conf_incl_graph}"   'Y'
 fc_set_value_var_nvl 'moat370_conf_incl_map'     "${moat370_conf_incl_map}"     'Y'
 fc_set_value_var_nvl 'moat370_conf_incl_treemap' "${moat370_conf_incl_treemap}" 'Y'
-fc_set_value_var_nvl 'moat370_conf_incl_file'    "${moat370_conf_incl_file}"    'Y'
+fc_set_value_var_nvl 'moat370_conf_incl_text'    "${moat370_conf_incl_text}"    'Y'
+fc_set_value_var_nvl 'moat370_conf_incl_html'    "${moat370_conf_incl_html}"    'Y'
 
-fc_validate_variable moat370_conf_incl_html    Y_N
-fc_validate_variable moat370_conf_incl_text    Y_N
+fc_validate_variable moat370_conf_incl_table   Y_N
 fc_validate_variable moat370_conf_incl_csv     Y_N
 fc_validate_variable moat370_conf_incl_line    Y_N
 fc_validate_variable moat370_conf_incl_pie     Y_N
@@ -157,12 +156,12 @@ fc_validate_variable moat370_conf_incl_bar     Y_N
 fc_validate_variable moat370_conf_incl_graph   Y_N
 fc_validate_variable moat370_conf_incl_map     Y_N
 fc_validate_variable moat370_conf_incl_treemap Y_N
-fc_validate_variable moat370_conf_incl_file    Y_N
+fc_validate_variable moat370_conf_incl_text    Y_N
+fc_validate_variable moat370_conf_incl_html    Y_N
 
 ##-------------------------
 
-fc_def_empty_var moat370_conf_def_html
-fc_def_empty_var moat370_conf_def_text
+fc_def_empty_var moat370_conf_def_table
 fc_def_empty_var moat370_conf_def_csv
 fc_def_empty_var moat370_conf_def_line
 fc_def_empty_var moat370_conf_def_pie
@@ -170,10 +169,10 @@ fc_def_empty_var moat370_conf_def_bar
 fc_def_empty_var moat370_conf_def_graph
 fc_def_empty_var moat370_conf_def_map
 fc_def_empty_var moat370_conf_def_treemap
-fc_def_empty_var moat370_conf_def_file
+fc_def_empty_var moat370_conf_def_text
+fc_def_empty_var moat370_conf_def_html
 
-fc_set_value_var_nvl 'moat370_conf_def_html'    "${moat370_conf_def_html}"    'Y'
-fc_set_value_var_nvl 'moat370_conf_def_text'    "${moat370_conf_def_text}"    'N'
+fc_set_value_var_nvl 'moat370_conf_def_table'   "${moat370_conf_def_table}"   'Y'
 fc_set_value_var_nvl 'moat370_conf_def_csv'     "${moat370_conf_def_csv}"     'N'
 fc_set_value_var_nvl 'moat370_conf_def_line'    "${moat370_conf_def_line}"    'N'
 fc_set_value_var_nvl 'moat370_conf_def_pie'     "${moat370_conf_def_pie}"     'N'
@@ -181,10 +180,10 @@ fc_set_value_var_nvl 'moat370_conf_def_bar'     "${moat370_conf_def_bar}"     'N
 fc_set_value_var_nvl 'moat370_conf_def_graph'   "${moat370_conf_def_graph}"   'N'
 fc_set_value_var_nvl 'moat370_conf_def_map'     "${moat370_conf_def_map}"     'N'
 fc_set_value_var_nvl 'moat370_conf_def_treemap' "${moat370_conf_def_treemap}" 'N'
-fc_set_value_var_nvl 'moat370_conf_def_file'    "${moat370_conf_def_file}"    'N'
+fc_set_value_var_nvl 'moat370_conf_def_text'    "${moat370_conf_def_text}"    'N'
+fc_set_value_var_nvl 'moat370_conf_def_html'    "${moat370_conf_def_html}"    'N'
 
-fc_validate_variable moat370_conf_def_html    Y_N
-fc_validate_variable moat370_conf_def_text    Y_N
+fc_validate_variable moat370_conf_def_table   Y_N
 fc_validate_variable moat370_conf_def_csv     Y_N
 fc_validate_variable moat370_conf_def_line    Y_N
 fc_validate_variable moat370_conf_def_pie     Y_N
@@ -192,26 +191,24 @@ fc_validate_variable moat370_conf_def_bar     Y_N
 fc_validate_variable moat370_conf_def_graph   Y_N
 fc_validate_variable moat370_conf_def_map     Y_N
 fc_validate_variable moat370_conf_def_treemap Y_N
-fc_validate_variable moat370_conf_def_file    Y_N
+fc_validate_variable moat370_conf_def_text    Y_N
+fc_validate_variable moat370_conf_def_html    Y_N
 
 ##-------------------------
 
 fc_def_empty_var moat370_conf_incl_trace
-fc_def_empty_var moat370_conf_incl_opatch
 fc_def_empty_var moat370_conf_ask_license
 fc_def_empty_var moat370_conf_sql_format
 fc_def_empty_var moat370_conf_sql_highlight
 fc_def_empty_var moat370_conf_tablefilter
 
 fc_set_value_var_nvl 'moat370_conf_incl_trace'    "${moat370_conf_incl_trace}"    'N'
-fc_set_value_var_nvl 'moat370_conf_incl_opatch'   "${moat370_conf_incl_opatch}"   'N'
 fc_set_value_var_nvl 'moat370_conf_ask_license'   "${moat370_conf_ask_license}"   'N'
 fc_set_value_var_nvl 'moat370_conf_sql_format'    "${moat370_conf_sql_format}"    'N'
 fc_set_value_var_nvl 'moat370_conf_sql_highlight' "${moat370_conf_sql_highlight}" 'Y'
 fc_set_value_var_nvl 'moat370_conf_tablefilter'   "${moat370_conf_tablefilter}"   'Y'
 
 fc_validate_variable moat370_conf_incl_trace    Y_N
-fc_validate_variable moat370_conf_incl_opatch   Y_N
 fc_validate_variable moat370_conf_ask_license   Y_N
 fc_validate_variable moat370_conf_sql_format    Y_N
 fc_validate_variable moat370_conf_sql_highlight Y_N

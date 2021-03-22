@@ -22,10 +22,10 @@ moat370_code_set_x=$(fc_is_set_control_enabled 'x')
 moat370_code_set_u=$(fc_is_set_control_enabled 'u')
 
 ## Define current code version:
-source "${v_base_dir}"/cfg/version.cfg
+source "${moat370_fdr}"/cfg/version.cfg
 
 ## Define all functions and files:
-source "${v_base_dir}"/cfg/moat370_fc_define_files.cfg
+source "${moat370_fdr}"/cfg/moat370_fc_define_files.cfg
 
 ## Exit if not connected to a database
 # database_check_connected
@@ -46,11 +46,11 @@ moat370_main_time0=$(get_secs)
 
 ## Define SW folder and load configurations:
 fc_def_empty_var moat370_pre_sw_base
-# fc_set_value_var_nvl 'moat370_sw_base' "${moat370_pre_sw_base}" "./"
-fc_set_value_var_nvl 'moat370_sw_base' "${moat370_pre_sw_base}" "${v_base_dir}"
+# fc_set_value_var_nvl 'moat370_fdr' "${moat370_pre_sw_base}" "./"
+fc_set_value_var_nvl 'moat370_fdr' "${moat370_pre_sw_base}" "${moat370_fdr}"
 
 fc_def_empty_var moat370_pre_sw_folder
-#fc_set_value_var_nvl 'moat370_sw_folder' "${moat370_pre_sw_folder}" "${moat370_sw_base}/sql"
+#fc_set_value_var_nvl 'moat370_sw_folder' "${moat370_pre_sw_folder}" "${moat370_fdr}/sql"
 fc_set_value_var_nvl 'moat370_sw_folder' "${moat370_pre_sw_folder}" "."
 if [ -f "${moat370_sw_folder}/cfg/00_software.cfg" ]
 then
@@ -222,7 +222,7 @@ bin_check_exit ${cmd_grep}
 bin_check_exit ${cmd_sed}
 bin_check_exit ${cmd_gawk}
 
-cmd_awk_awk_func_dir="${v_this_dir}/csv-parser.awk"
+cmd_awk_awk_func_dir="${moat370_fdr_sh}/csv-parser.awk"
 cmd_awk_param="-f ${cmd_awk_awk_func_dir} -v separator=, -v enclosure=\""
 cmd_awk_csv="${cmd_gawk} ${cmd_awk_param}"
 
@@ -443,28 +443,28 @@ then
 fi
 
 ## inclusion config determine skip flags
-fc_set_value_var_decode moat370_skip_table    "${moat370_conf_incl_html}"    'N' "--" ''
-fc_set_value_var_decode moat370_skip_text    "${moat370_conf_incl_text}"    'N' "--" ''
-fc_set_value_var_decode moat370_skip_csv     "${moat370_conf_incl_csv}"     'N' "--" ''
-fc_set_value_var_decode moat370_skip_line    "${moat370_conf_incl_line}"    'N' "--" ''
-fc_set_value_var_decode moat370_skip_pie     "${moat370_conf_incl_pie}"     'N' "--" ''
-fc_set_value_var_decode moat370_skip_bar     "${moat370_conf_incl_bar}"     'N' "--" ''
-fc_set_value_var_decode moat370_skip_graph   "${moat370_conf_incl_graph}"   'N' "--" ''
-fc_set_value_var_decode moat370_skip_map     "${moat370_conf_incl_map}"     'N' "--" ''
-fc_set_value_var_decode moat370_skip_treemap "${moat370_conf_incl_treemap}" 'N' "--" ''
-fc_set_value_var_decode moat370_skip_file    "${moat370_conf_incl_file}"    'N' "--" ''
+fc_set_value_var_decode moat370_skip_table   "${moat370_conf_incl_table}"   'N' "-" ''
+fc_set_value_var_decode moat370_skip_csv     "${moat370_conf_incl_csv}"     'N' "-" ''
+fc_set_value_var_decode moat370_skip_line    "${moat370_conf_incl_line}"    'N' "-" ''
+fc_set_value_var_decode moat370_skip_pie     "${moat370_conf_incl_pie}"     'N' "-" ''
+fc_set_value_var_decode moat370_skip_bar     "${moat370_conf_incl_bar}"     'N' "-" ''
+fc_set_value_var_decode moat370_skip_graph   "${moat370_conf_incl_graph}"   'N' "-" ''
+fc_set_value_var_decode moat370_skip_map     "${moat370_conf_incl_map}"     'N' "-" ''
+fc_set_value_var_decode moat370_skip_treemap "${moat370_conf_incl_treemap}" 'N' "-" ''
+fc_set_value_var_decode moat370_skip_text    "${moat370_conf_incl_text}"    'N' "-" ''
+fc_set_value_var_decode moat370_skip_html    "${moat370_conf_incl_html}"    'N' "-" ''
 
 ## inclusion config determine skip flags
-fc_set_value_var_decode moat370_def_skip_html    "${moat370_conf_def_html}"    'N' "--" ''
-fc_set_value_var_decode moat370_def_skip_text    "${moat370_conf_def_text}"    'N' "--" ''
-fc_set_value_var_decode moat370_def_skip_csv     "${moat370_conf_def_csv}"     'N' "--" ''
-fc_set_value_var_decode moat370_def_skip_line    "${moat370_conf_def_line}"    'N' "--" ''
-fc_set_value_var_decode moat370_def_skip_pie     "${moat370_conf_def_pie}"     'N' "--" ''
-fc_set_value_var_decode moat370_def_skip_bar     "${moat370_conf_def_bar}"     'N' "--" ''
-fc_set_value_var_decode moat370_def_skip_graph   "${moat370_conf_def_graph}"   'N' "--" ''
-fc_set_value_var_decode moat370_def_skip_map     "${moat370_conf_def_map}"     'N' "--" ''
-fc_set_value_var_decode moat370_def_skip_treemap "${moat370_conf_def_treemap}" 'N' "--" ''
-fc_set_value_var_decode moat370_def_skip_file    "${moat370_conf_def_file}"    'N' "--" ''
+fc_set_value_var_decode moat370_def_skip_table   "${moat370_conf_def_table}"   'N' "-" ''
+fc_set_value_var_decode moat370_def_skip_csv     "${moat370_conf_def_csv}"     'N' "-" ''
+fc_set_value_var_decode moat370_def_skip_line    "${moat370_conf_def_line}"    'N' "-" ''
+fc_set_value_var_decode moat370_def_skip_pie     "${moat370_conf_def_pie}"     'N' "-" ''
+fc_set_value_var_decode moat370_def_skip_bar     "${moat370_conf_def_bar}"     'N' "-" ''
+fc_set_value_var_decode moat370_def_skip_graph   "${moat370_conf_def_graph}"   'N' "-" ''
+fc_set_value_var_decode moat370_def_skip_map     "${moat370_conf_def_map}"     'N' "-" ''
+fc_set_value_var_decode moat370_def_skip_treemap "${moat370_conf_def_treemap}" 'N' "-" ''
+fc_set_value_var_decode moat370_def_skip_text    "${moat370_conf_def_text}"    'N' "-" ''
+fc_set_value_var_decode moat370_def_skip_html    "${moat370_conf_def_html}"    'N' "-" ''
 
 top_level_hints='NO_MERGE'
 ##
@@ -521,7 +521,7 @@ fi
 ## main header
 
 rm -f "${moat370_main_report}"
-fc_paste_file_replacing_variables "${v_base_dir}"/cfg/moat370_html_header.html "${moat370_main_report}"
+fc_paste_file_replacing_variables "${moat370_fdr_cfg}"/moat370_html_header.html "${moat370_main_report}"
 
 moat370_time_stamp=$(date "${moat370_date_format}")
 cat >> "${moat370_main_report}" <<EOF

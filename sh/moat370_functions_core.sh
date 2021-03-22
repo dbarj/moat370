@@ -241,8 +241,8 @@ fc_def_output_file ()
   ## Param 1 = Variable name
   ## Param 2 = Filename
 
-  c_ofile_param1="$1"
-  c_ofile_param2="$2"
+  local c_ofile_param1="$1"
+  local c_ofile_param2="$2"
 
   eval $c_ofile_param1=${moat370_sw_output_fdr}/${c_ofile_param2}
 
@@ -325,7 +325,7 @@ fc_clean_file_name ()
 
 fc_load_db_functions ()
 {
-  source "${v_this_dir}"/${moat370_sw_db_type}_functions.sh
+  source "${moat370_fdr_sh}"/${moat370_sw_db_type}_functions.sh
 }
 
 fc_section_variables ()
@@ -389,8 +389,7 @@ fc_reset_defaults ()
   sql_format="${moat370_def_sql_format}"
   sql_show="${moat370_def_sql_show}"
   ##
-  skip_table="${moat370_def_skip_html}"
-  #skip_text="${moat370_def_skip_text}"
+  skip_table="${moat370_def_skip_table}"
   skip_csv="${moat370_def_skip_csv}"
   skip_line="${moat370_def_skip_line}"
   skip_pie="${moat370_def_skip_pie}"
@@ -398,8 +397,8 @@ fc_reset_defaults ()
   skip_graph="${moat370_def_skip_graph}"
   skip_map="${moat370_def_skip_map}"
   skip_treemap="${moat370_def_skip_treemap}"
-  skip_text="--"
-  skip_html="--"
+  skip_text="${moat370_def_skip_text}"
+  skip_html="${moat370_def_skip_html}"
   output_type=''
   d3_graph=''
   ##
@@ -502,9 +501,9 @@ fc_encode_html ()
 
   if [ -z "${in_custom}" ]
   then
-    enc_html_template_file="${v_base_dir}/cfg/moat370_html_encoded.html"
+    enc_html_template_file="${moat370_fdr_cfg}/moat370_html_encoded.html"
   else
-    enc_html_template_file="${v_base_dir}/cfg/moat370_html_encoded_index.html"
+    enc_html_template_file="${moat370_fdr_cfg}/moat370_html_encoded_index.html"
   fi
 
   ## This is necessary to resolve the variables inside the enc_html_template_file.

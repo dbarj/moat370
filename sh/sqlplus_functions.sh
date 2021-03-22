@@ -95,15 +95,15 @@ fc_db_check_connection ()
 
 fc_db_begin_code ()
 {
-  fc_db_run_file "${v_base_dir}"/database/oracle/oracle_version.sql
-  fc_db_run_file "${v_base_dir}"/database/oracle/oracle_pre.sql
+  fc_db_run_file "${moat370_fdr}"/database/oracle/oracle_version.sql
+  fc_db_run_file "${moat370_fdr}"/database/oracle/oracle_pre.sql
   fc_load_variable ALL
   fc_load_variable _SQLPLUS_RELEASE v_database_release
 }
 
 fc_db_end_code ()
 {
-  fc_db_run_file "${v_base_dir}"/database/oracle/oracle_post.sql
+  fc_db_run_file "${moat370_fdr}"/database/oracle/oracle_post.sql
 }
 
 fc_db_run_file ()
@@ -120,7 +120,7 @@ fc_db_define_module ()
 fc_db_reset_options ()
 {
   sql_text_cdb=''
-  fc_db_run_file "${v_base_dir}"/database/oracle/oracle_reset.sql
+  fc_db_run_file "${moat370_fdr}"/database/oracle/oracle_reset.sql
 }
 
 fc_db_pre_section_call ()
@@ -138,13 +138,13 @@ fc_db_create_csv ()
 
   # if [ $(substr_var "$v_database_release" 1 3) -ge 122 ]
   # then
-  #   fc_run_query "@${v_base_dir}/database/oracle/oracle_run_csv.sql ${v_in_file} ${v_out_csv}"
+  #   fc_run_query "@${moat370_fdr}/database/oracle/oracle_run_csv.sql ${v_in_file} ${v_out_csv}"
   #   fc_check_executed
   # else
     fc_def_output_file v_out_html 'fc_db_create_html.out'
     rm -f "${v_out_html}"
 
-    fc_run_query "@${v_base_dir}/database/oracle/oracle_run_html.sql ${v_in_file} ${v_out_html}"
+    fc_run_query "@${moat370_fdr}/database/oracle/oracle_run_html.sql ${v_in_file} ${v_out_html}"
     fc_check_executed
     fc_convert_html_to_csv "${v_out_html}" "${v_out_csv}"
     rm -f "${v_out_html}"
@@ -168,7 +168,7 @@ fc_db_create_raw ()
   fc_def_output_file v_out_raw 'fc_db_create_raw.out'
   rm -f "${v_out_raw}"
 
-  fc_run_query "@${v_base_dir}/database/oracle/oracle_run_raw.sql ${v_in_file} ${v_out_raw}"
+  fc_run_query "@${moat370_fdr}/database/oracle/oracle_run_raw.sql ${v_in_file} ${v_out_raw}"
   fc_check_executed
   $cmd_sed -e ':a' -e '/./,$!d;/^\n*$/{$d;N;};/\n$/ba' "${v_out_raw}" > "${v_out_file}"
 
@@ -185,7 +185,7 @@ fc_db_table_description ()
 {
   local v_output_file
   v_output_file="$1"
-  fc_run_query "@${v_base_dir}/database/oracle/oracle_table_desc.sql ${v_output_file} ${moat370_sw_desc_linesize} ${main_table}"
+  fc_run_query "@${moat370_fdr}/database/oracle/oracle_table_desc.sql ${v_output_file} ${moat370_sw_desc_linesize} ${main_table}"
   fc_check_executed
 }
 
@@ -267,7 +267,7 @@ fc_load_variable ()
 
   if [ "${v_load_variable_name}" != 'ALL' ]
   then
-    fc_run_query "@${v_base_dir}/database/oracle/oracle_load_variable.sql ${v_load_variable_file} ${v_load_variable_name}"
+    fc_run_query "@${moat370_fdr}/database/oracle/oracle_load_variable.sql ${v_load_variable_file} ${v_load_variable_name}"
     fc_check_executed
 
     v_output=$(sed '/^DEFINE/!d' "${v_load_variable_file}")
@@ -290,7 +290,7 @@ fc_load_variable ()
 
     eval ${v_def_var}=\${v_value_var}
   else
-    fc_run_query "@${v_base_dir}/database/oracle/oracle_load_variable.sql ${v_load_variable_file} ''"
+    fc_run_query "@${moat370_fdr}/database/oracle/oracle_load_variable.sql ${v_load_variable_file} ''"
     fc_check_executed
 
     v_output=$(sed '/^DEFINE/!d' "${v_load_variable_file}")

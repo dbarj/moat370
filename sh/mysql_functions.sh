@@ -100,13 +100,13 @@ fc_db_check_connection ()
 
 fc_db_begin_code ()
 {
-  fc_db_run_file "${v_base_dir}"/database/mysql/mysql_pre.sql
+  fc_db_run_file "${moat370_fdr}"/database/mysql/mysql_pre.sql
   fc_load_variable ALL
 }
 
 fc_db_end_code ()
 {
-  fc_db_run_file "${v_base_dir}"/database/mysql/mysql_post.sql
+  fc_db_run_file "${moat370_fdr}"/database/mysql/mysql_post.sql
 }
 
 fc_db_run_file ()
@@ -122,7 +122,7 @@ fc_db_define_module ()
 
 fc_db_reset_options ()
 {
-  fc_db_run_file "${v_base_dir}"/database/mysql/mysql_reset.sql
+  fc_db_run_file "${moat370_fdr}"/database/mysql/mysql_reset.sql
 }
 
 fc_db_pre_section_call ()
@@ -139,7 +139,7 @@ fc_db_create_csv ()
   rm -f "${v_out_tab}"
 
   fc_def_output_file v_in_tmp 'fc_db_create_csv.tmp'
-  cp "${v_base_dir}/database/mysql/mysql_run_csv.sql" "${v_in_tmp}"
+  cp "${moat370_fdr}/database/mysql/mysql_run_csv.sql" "${v_in_tmp}"
 
   fc_replace_file_variable "${v_in_tmp}" '%%file_name%%' "${v_out_tab}"
   fc_replace_file_variable "${v_in_tmp}" '%%error_file%%' "${v_database_err_file}"
@@ -175,7 +175,7 @@ fc_db_create_raw ()
   rm -f "${v_out_raw}"
 
   fc_def_output_file v_in_tmp 'fc_db_create_csv.tmp'
-  cp "${v_base_dir}/database/mysql/mysql_run_csv.sql" "${v_in_tmp}"
+  cp "${moat370_fdr}/database/mysql/mysql_run_csv.sql" "${v_in_tmp}"
 
   fc_replace_file_variable "${v_in_tmp}" '%%file_name%%' "${v_out_raw}"
   fc_replace_file_variable "${v_in_tmp}" '%%error_file%%' "${v_database_err_file}"
@@ -201,7 +201,7 @@ fc_db_table_description ()
   v_output_file="$1"
 
   fc_def_output_file v_in_tmp 'fc_db_table_description.tmp'
-  cp "${v_base_dir}/database/mysql/mysql_table_desc.sql" "${v_in_tmp}"
+  cp "${moat370_fdr}/database/mysql/mysql_table_desc.sql" "${v_in_tmp}"
 
   fc_replace_file_variable "${v_in_tmp}" '%%file_name%%' "${v_output_file}"
   fc_replace_file_variable "${v_in_tmp}" '%%table_name%%' "${main_table}"
@@ -283,7 +283,7 @@ fc_load_variable ()
 
   if [ "${v_load_variable_name}" != 'ALL' ]
   then
-    cp "${v_base_dir}/database/mysql/mysql_load_variable.sql" "${v_temp_variable_file}"
+    cp "${moat370_fdr}/database/mysql/mysql_load_variable.sql" "${v_temp_variable_file}"
     fc_replace_file_variable "${v_temp_variable_file}" '%%var_name%%' "${v_load_variable_name}"
     fc_replace_file_variable "${v_temp_variable_file}" '%%file_name%%' "${v_load_variable_file}"
     fc_run_query "source ${v_temp_variable_file}"
@@ -297,7 +297,7 @@ fc_load_variable ()
     fi
 
   else
-    cp "${v_base_dir}/database/mysql/mysql_load_variable_all.sql" "${v_temp_variable_file}"
+    cp "${moat370_fdr}/database/mysql/mysql_load_variable_all.sql" "${v_temp_variable_file}"
     fc_replace_file_variable "${v_temp_variable_file}" '%%file_name%%' "${v_load_variable_file}"
     fc_run_query "source ${v_temp_variable_file}"
     fc_check_executed

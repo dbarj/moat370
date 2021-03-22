@@ -33,15 +33,15 @@ v_parameters=("$@")
 
 v_this_script="$(basename -- "$0")"
 v_this_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
-v_base_dir="$(cd -P "$v_this_dir/.."; pwd)"
+moat370_fdr="$(cd -P "$v_this_dir/.."; pwd)"
 # v_this_dir=$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P) # Folder of this script
 
 # Load all code functions.
-source "${v_this_dir}"/moat370_functions_core.sh
-source "${v_this_dir}"/moat370_functions_datatypes.sh
-source "${v_this_dir}"/moat370_functions_procsql.sh
-source "${v_this_dir}"/moat370_functions_csv_parser.sh
-source "${v_this_dir}"/moat370_functions_charts.sh
+source "${moat370_fdr}"/sh/moat370_functions_core.sh
+source "${moat370_fdr}"/sh/moat370_functions_datatypes.sh
+source "${moat370_fdr}"/sh/moat370_functions_procsql.sh
+source "${moat370_fdr}"/sh/moat370_functions_csv_parser.sh
+source "${moat370_fdr}"/sh/moat370_functions_charts.sh
 
 trap 'trap_error $LINENO' ERR
 trap 'exit_error "Code interrupted."' SIGINT SIGTERM
@@ -49,7 +49,7 @@ trap 'exit_error "Code interrupted."' SIGINT SIGTERM
 bin_check_exit awk
 bin_check_exit mkfifo
 
-source "${v_this_dir}"/moat370_0b_pre.sh
+source "${moat370_fdr}"/sh/moat370_0b_pre.sh
 
 section_id='0a'
 fc_db_define_module
@@ -140,7 +140,7 @@ then
   source "${moat370_sw_folder}/sh/${moat370_sw_name}_0b_post.sh"
 fi
 
-source "${v_this_dir}"/moat370_0c_post.sh
+source "${moat370_fdr_sh}"/moat370_0c_post.sh
 
 fc_encrypt_output_zip moat370_zip_filename
 

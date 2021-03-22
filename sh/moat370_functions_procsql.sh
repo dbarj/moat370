@@ -293,8 +293,8 @@ fc_exec_item ()
   [ -z "${skip_graph}${moat370_skip_graph}" ]     && fc_proc_graphviz_chart
   [ -z "${skip_map}${moat370_skip_map}" ]         && fc_proc_map_chart
   [ -z "${skip_treemap}${moat370_skip_treemap}" ] && fc_proc_treemap_chart
-  [ -z "${skip_text}${moat370_skip_file}" ]       && fc_proc_one_text_file
-  [ -z "${skip_html}${moat370_skip_file}" ]       && fc_proc_one_html_file
+  [ -z "${skip_text}${moat370_skip_text}" ]       && fc_proc_one_text_file
+  [ -z "${skip_html}${moat370_skip_html}" ]       && fc_proc_one_html_file
 
   ## Check D3 Graphs
   local moat370_d3_graph_valid_opts='|circle_packing|'
@@ -305,15 +305,15 @@ fc_exec_item ()
   [ -z "${d3_graph}" ] && d3_graph=""
   set +u
 
-  fc_def_empty_var skip_moat370_d3_graph
-  [ -z "${d3_graph}" ] && skip_moat370_d3_graph='-'
+  fc_def_empty_var moat370_skip_d3_graph
+  [ -z "${d3_graph}" ] && moat370_skip_d3_graph='-'
 
-  [ $(instr_var "${moat370_d3_graph_skip}" "|${d3_graph}|") -gt 0 ] && skip_moat370_d3_graph='-'
-  [ $(instr_var "${moat370_d3_graph_valid_opts}" "|${d3_graph}|") -eq 0 ] && skip_moat370_d3_graph='-'
+  [ $(instr_var "${moat370_d3_graph_skip}" "|${d3_graph}|") -gt 0 ] && moat370_skip_d3_graph='-'
+  [ $(instr_var "${moat370_d3_graph_valid_opts}" "|${d3_graph}|") -eq 0 ] && moat370_skip_d3_graph='-'
 
-  [ -z "${skip_moat370_d3_graph}" ] && fc_proc_d3_${d3_graph}
+  [ -z "${moat370_skip_d3_graph}" ] && fc_proc_d3_${d3_graph}
 
-  unset skip_moat370_d3_graph
+  unset moat370_skip_d3_graph
 
   ##
   fc_zip_file "${moat370_zip_filename}" "${moat370_log2}" false
@@ -580,7 +580,7 @@ fc_html_topic_intro ()
   get_time_t0=$(get_secs)
 
   ## header
-  fc_paste_file_replacing_variables "${v_base_dir}"/cfg/moat370_html_header.html "${one_spool_fullpath_filename}"
+  fc_paste_file_replacing_variables "${moat370_fdr_cfg}"/moat370_html_header.html "${one_spool_fullpath_filename}"
 
   ## javascripts
   [ "${sql_format}" = 'Y' ] && echo '<script type="text/javascript" src="sql-formatter.js"></script>' >> "${one_spool_fullpath_filename}"
@@ -660,7 +660,7 @@ fc_html_topic_end ()
   total_hours="Topic execution time: $(convert_secs $(do_calc 'get_time_t1-get_time_t0'))."
 
   moat370_time_stamp=$(date "${moat370_date_format}")
-  fc_paste_file_replacing_variables "${v_base_dir}"/cfg/moat370_html_footer.html "${one_spool_fullpath_filename}"
+  fc_paste_file_replacing_variables "${moat370_fdr_cfg}"/moat370_html_footer.html "${one_spool_fullpath_filename}"
 
   ## update log2
   fc_def_empty_var moat370_prev_sql_id
