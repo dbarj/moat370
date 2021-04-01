@@ -74,7 +74,7 @@ moat370_sw_output_fdr_fpath="$(cd -P "${moat370_sw_output_fdr}"; pwd)"
 source "${fc_parse_parameters}"
 unset in_main_param1 in_main_param2 in_main_param3 in_main_param4 in_main_param5
 
-fc_validate_variable moat370_sw_db_type RANGE sqlplus,sqlcl,mysql,offline
+fc_validate_variable moat370_sw_db_type RANGE sqlplus,sqlcl,mysql,postgres,offline
 fc_validate_variable moat370_sw_db_conn_params NOT_NULL
 
 ## Override moat370_sections with sections_param if provided
@@ -466,7 +466,7 @@ fc_set_value_var_decode moat370_def_skip_treemap "${moat370_conf_def_treemap}" '
 fc_set_value_var_decode moat370_def_skip_text    "${moat370_conf_def_text}"    'N' "-" ''
 fc_set_value_var_decode moat370_def_skip_html    "${moat370_conf_def_html}"    'N' "-" ''
 
-top_level_hints='NO_MERGE'
+fc_def_empty_var top_level_hints
 ##
 
 ## get cores_threads_hosts

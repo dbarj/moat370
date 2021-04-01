@@ -23,12 +23,13 @@ fc_gen_select_star_query ()
   ## If parameter 3 is defined, it will order by this parameter. If param1 is a CDB view, con_id will be the first order by clause.
   local in_table="$1"
   local in_variable="$2"
+  local v_insert_hint=''
 
   set +u
   local in_order_by="$3"
   fc_enable_set_u
 
-  fc_set_value_var_nvl in_order_by "${in_order_by}" '1, 2'
+  fc_set_value_var_nvl in_order_by "${in_order_by}" '1'
 
   local def_sel_star_qry=''
 
@@ -38,8 +39,13 @@ fc_gen_select_star_query ()
 
   in_order_by="${order_by_cdb_flag}${in_order_by}"
 
+  if [ -n "${top_level_hints}" ]
+  then
+    v_insert_hint="/*+ ${top_level_hints} */ "
+  fi
+
   def_sel_star_qry="
-  SELECT /*+ ${top_level_hints} */ /* ${section_id}.${report_sequence} */
+  SELECT ${v_insert_hint}/* ${section_id}.${report_sequence} */
          *
     FROM ${in_table}
    ORDER BY
