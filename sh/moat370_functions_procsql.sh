@@ -192,7 +192,8 @@ fc_exec_item ()
   # Change Oracle double slash comments to comment blocks
   sql_text_display=$($cmd_sed 's/--\(.*\)/\/\*\1\*\//' <<< "${sql_text_display}")
 
-  [ -n "${sql_text_display}" ] && fc_echo_screen_log "${sql_text_display};"
+  [ -n "${sql_text_display}" ] && ${input_csv_mode} && sql_text_display="${sql_text_display};"
+  [ -n "${sql_text_display}" ] && fc_echo_screen_log "${sql_text_display}"
 
   ## Remove spaces before or after
   sql_text=$(trim_var "${sql_text}")

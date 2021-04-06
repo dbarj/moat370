@@ -511,7 +511,10 @@ fc_load_column ()
   ## The variable below will be changed to YES if the code ever enter in 9a
   moat370_column_print='NO'
   
-  v_list=$(${cmd_grep} -e "^${moat370_cur_col_id}" ${moat370_sections_file} | ${cmd_awk} -F',' '{print $2}')
+  if ${cmd_grep} -q -e "^${moat370_cur_col_id}" ${moat370_sections_file}
+  then
+    v_list=$(${cmd_grep} -e "^${moat370_cur_col_id}" ${moat370_sections_file} | ${cmd_awk} -F',' '{print $2}')
+  fi
 
   for v_csv_2 in ${v_list}
   do

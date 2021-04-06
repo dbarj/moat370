@@ -57,7 +57,7 @@ fc_db_define_module
 fc_reset_defaults
 
 ## Load custom pre if exists
-v_list=$(ls -1 "${moat370_sw_folder}"/sh/${moat370_sw_name}_0*_pre.sh "${moat370_sw_folder}"/sql/${moat370_sw_name}_0*_pre.sql 2> /dev/null)
+v_list=$(ls -1 "${moat370_sw_folder}"/sh/${moat370_sw_name}_0*_pre.sh "${moat370_sw_folder}"/sql/${moat370_sw_name}_0*_pre.sql 2> /dev/null || true)
 v_list=$(sed 's:.*/::' <<< "${v_list}" | sort)
 
 for v_file in ${v_list}
@@ -129,7 +129,7 @@ section_id='0c'
 fc_db_define_module
 
 ## Load custom post if exists
-v_list=$(ls -1 "${moat370_sw_folder}"/sh/${moat370_sw_name}_0*_post.sh "${moat370_sw_folder}"/sql/${moat370_sw_name}_0*_post.sql 2> /dev/null)
+v_list=$(ls -1 "${moat370_sw_folder}"/sh/${moat370_sw_name}_0*_post.sh "${moat370_sw_folder}"/sql/${moat370_sw_name}_0*_post.sql 2> /dev/null || true)
 v_list=$(sed 's:.*/::' <<< "${v_list}" | sort)
 
 for v_file in ${v_list}
