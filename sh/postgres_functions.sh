@@ -50,11 +50,10 @@ fc_db_startup_connection ()
   [ -f "${v_database_fifo_file}" -o -p "${v_database_fifo_file}" ] && rm -f "${v_database_fifo_file}"
   mkfifo "${v_database_fifo_file}"
   exec 3<>"${v_database_fifo_file}"
-  fc_def_output_file v_database_in_file 'database_input.log'
+  fc_def_output_file v_database_in_file  'database_input.log'
   fc_def_output_file v_database_out_file 'database_output.log'
   fc_def_output_file v_database_err_file 'database_error.log'
   cat <&3 | psql --file - ${moat370_sw_db_conn_params} > "${v_database_out_file}" 2> "${v_database_out_file}" &
-  # cat <&3 | psql ${moat370_sw_db_conn_params} > "${v_database_out_file}" 2> "${v_database_out_file}" &
   v_db_client_pid=$!
 }
 
@@ -295,6 +294,7 @@ fc_load_variable ()
   set +u
   v_load_target_name="$2"
   fc_enable_set_u
+  [ -z "${v_load_target_name}" ] && v_load_target_name=${v_load_variable_name}
 
   fc_def_output_file v_temp_variable_file 'fc_load_variable.tmp'
 
@@ -318,7 +318,7 @@ fc_load_variable ()
         echo_error "Undefined variable ${v_load_variable_name}."
         return
       fi
-      eval ${v_load_variable_name}=\${v_load_variable_result}
+      eval ${v_load_target_name}=\${v_load_variable_result}
     fi
   fi
 

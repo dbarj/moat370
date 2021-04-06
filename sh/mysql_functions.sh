@@ -335,15 +335,3 @@ fc_convert_html_to_csv ()
   $cmd_sed $'s:\t:",":g' > "${v_out_file}"
 
 }
-
-fc_replace_file_variable ()
-{
-  local v_in_file="$1"
-  local v_in_attr=$(ere_quote "$2")
-  local v_in_repl=$(ere_quote "$3")
-  local v_out_file="${v_in_file}.tmp"
-
-  sed "s|${v_in_attr}|${v_in_repl}|g" "${v_in_file}" > "${v_out_file}"
-
-  mv "${v_out_file}" "${v_in_file}"
-}
