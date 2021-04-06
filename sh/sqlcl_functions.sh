@@ -38,6 +38,8 @@
 # fc_db_pre_exec_call
 # fc_db_sql_transform
 
+########################
+
 # printf %s\\n "$-"
 bin_check_exit sql
 bin_check_exit mkfifo
@@ -68,7 +70,7 @@ fc_db_end_connection ()
   [ -p "${v_database_fifo_file}" ] && rm -f "${v_database_fifo_file}"
   fc_seq_output_file v_database_out_file
   fc_zip_file "${moat370_zip_filename}" "${v_database_out_file}"
-  kill_db_connection
+  db_connection_kill
 }
 
 fc_db_check_connection ()
@@ -244,6 +246,11 @@ fc_run_query ()
 
 fc_check_executed ()
 {
+  # Optional parameter for how long (seconds) will wait.
+  set +u
+  local v_wait_limit="$1"
+  fc_enable_set_u
+
   # Check if database FIFO file reached the end.
   fc_def_output_file v_fc_db_run_file_output 'run_file.out'
   rm -f "${v_fc_db_run_file_output}"
@@ -251,7 +258,7 @@ fc_check_executed ()
   fc_run_query "SPOOL ${v_fc_db_run_file_output}"
   fc_run_query "PRO FINISHED"
   fc_run_query "SPOOL OFF"
-  fc_wait_string "${v_fc_db_run_file_output}" FINISHED
+  fc_wait_string "${v_fc_db_run_file_output}" FINISHED ${v_wait_limit}
 
   rm -f "${v_fc_db_run_file_output}"
 }

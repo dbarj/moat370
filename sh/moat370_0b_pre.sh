@@ -354,13 +354,7 @@ fi
 ## Startup DB Connection
 fc_def_empty_var v_db_client_pid
 fc_load_db_functions
-fc_db_startup_connection
-[ "${moat370_sw_db_type}" != "offline" ] && echo_time "Starting ${moat370_sw_db_type} in background. Connecting..."
-fc_db_check_connection
-[ "${moat370_sw_db_type}" != "offline" ] && echo_time "Connected."
-fc_db_begin_code
-[ "${moat370_sw_db_type}" != "offline" ] && echo_time "Loaded database startup code."
-fc_check_database_variables
+fc_connection_flow
 
 ## get database name (up to 10, stop before first '.', no special characters)
 database_name_short=$(lower_var "${database_name}")

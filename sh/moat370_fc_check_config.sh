@@ -220,16 +220,19 @@ fc_def_empty_var moat370_def_sql_format
 fc_def_empty_var moat370_def_sql_highlight
 fc_def_empty_var moat370_def_sql_maxrows
 fc_def_empty_var moat370_def_sql_show
+fc_def_empty_var moat370_def_sql_wait_secs
 
 fc_set_value_var_nvl 'moat370_def_sql_format'    "${moat370_def_sql_format}"    'Y'
 fc_set_value_var_nvl 'moat370_def_sql_highlight' "${moat370_def_sql_highlight}" 'Y'
 fc_set_value_var_nvl 'moat370_def_sql_maxrows'   "${moat370_def_sql_maxrows}"   '10000'
 fc_set_value_var_nvl 'moat370_def_sql_show'      "${moat370_def_sql_show}"      'Y'
+fc_set_value_var_nvl 'moat370_def_sql_wait_secs' "${moat370_def_sql_wait_secs}" '60'
 
 fc_validate_variable moat370_def_sql_format    Y_N
 fc_validate_variable moat370_def_sql_highlight Y_N
 fc_validate_variable moat370_def_sql_maxrows   IS_NUMBER
 fc_validate_variable moat370_def_sql_show      Y_N
+fc_validate_variable moat370_def_sql_wait_secs IS_NUMBER
 
 ##-------------------------
 

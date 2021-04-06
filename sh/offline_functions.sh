@@ -37,6 +37,8 @@
 # fc_db_pre_exec_call
 # fc_db_sql_transform
 
+########################
+
 fc_db_startup_connection ()
 {
   true

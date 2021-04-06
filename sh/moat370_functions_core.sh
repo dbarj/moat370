@@ -29,7 +29,25 @@ echo_error ()
   (>&2 echo_time "ERROR: $1")
 }
 
-kill_db_connection ()
+db_connection_kill ()
+{
+  # Kill DB Connection if stabilished.
+  if db_connection_check
+  then
+    kill ${v_db_client_pid}
+  fi
+}
+
+db_connection_sigint ()
+{
+  # Send SIGINT to DB Connection if stabilished.
+  if db_connection_check
+  then
+    kill -SIGINT ${v_db_client_pid}
+  fi
+}
+
+db_connection_check ()
 {
   # Kill DB Connection if stabilished.
   fc_def_empty_var v_db_client_pid
@@ -37,8 +55,12 @@ kill_db_connection ()
   then
     if kill -0 ${v_db_client_pid} > /dev/null 2>&1
     then
-      kill ${v_db_client_pid}
+      return 0
+    else
+      return 1
     fi
+  else
+    return 1
   fi
 }
 
@@ -61,7 +83,7 @@ exit_error ()
   echo_error "$1"
   # kill -9 $(ps -s $$ -o pid= | grep -v $$) 2>&-
   save_bash_variables
-  kill_db_connection
+  db_connection_kill
   exit 1
 }
 
@@ -75,6 +97,23 @@ trap_error ()
   if [ -n "${moat370_error_file}" ]
   then
     echo "Error in ${BASH_SOURCE[1]}:${BASH_LINENO[0]}. '${BASH_COMMAND}' exited with status $err" >> "${moat370_error_file}"
+  fi
+}
+
+trap_error ()
+{
+  local err=$?
+  set +o xtrace
+  local code="${1:-1}"
+  echo_error "Error in ${BASH_SOURCE[1]}:${BASH_LINENO[0]}. '${BASH_COMMAND}' exited with status $err"
+  # Print out the stack trace described by $function_stack  
+  if [ ${#FUNCNAME[@]} -gt 2 ]
+  then
+    echo_error "Call tree:"
+    for ((i=1;i<${#FUNCNAME[@]}-1;i++))
+    do
+      echo_error " $i: ${BASH_SOURCE[$i+1]}:${BASH_LINENO[$i]} ${FUNCNAME[$i]}(...)"
+    done
   fi
 }
 
@@ -388,6 +427,7 @@ fc_reset_defaults ()
   sql_hl="${moat370_def_sql_highlight}"
   sql_format="${moat370_def_sql_format}"
   sql_show="${moat370_def_sql_show}"
+  sql_wait_secs="${moat370_def_sql_wait_secs}"
   ##
   skip_table="${moat370_def_skip_table}"
   skip_csv="${moat370_def_skip_csv}"
@@ -416,12 +456,20 @@ fc_reset_defaults ()
 
 fc_wait_string ()
 {
-  local v_loop_limit v_sleep_time v_total_sleep
-  local v_string v_file
+  local v_file v_string
+  local v_start_time v_cur_time v_total_sleep v_sleep_time
+
   v_file="$1"
   v_string="$2"
-  v_loop_limit=5000
-  v_sleep_time=0.01
+
+  set +u
+  local v_wait_limit="$3"
+  fc_enable_set_u
+
+  [ -z "${v_wait_limit}" ] && v_wait_limit=10 # Secs
+
+  v_start_time=$(get_secs)
+  v_sleep_time=0.5
   v_total_sleep=0
 
   set +x
@@ -433,16 +481,24 @@ fc_wait_string ()
       break
     fi
     sleep ${v_sleep_time}
-    v_total_sleep=$(do_calc "v_total_sleep+1")
-    if [ ${v_total_sleep} -gt ${v_loop_limit} ]
+    v_cur_time=$(get_secs)
+    v_total_sleep=$(do_calc "v_cur_time-v_start_time")
+    if [ ${v_total_sleep} -gt ${v_wait_limit} ]
     then
-      cat "${v_file}"
-      exit_error "Unable to get string ${v_string} on file ${v_file}."
+      echo_error "Unable to get string ${v_string} on file ${v_file} after ${v_wait_limit} seconds."
+      fc_enable_set_x
+      return 1
+    fi
+    if ! db_connection_check
+    then
+      # If moat370_check_connection_status is true, will abort code execution if connection is dropped.
+      # Otherwise will return 1
+      ${moat370_check_connection_status} && exit_error "Lost DB connection." || return 1
     fi
   done
 
   fc_enable_set_x
-
+  return 0
 }
 
 fc_load_column ()
@@ -830,6 +886,41 @@ fc_enable_set_u ()
   then
     set -u
   fi
+}
+
+fc_connection_flow ()
+{
+  local moat370_max_retries=5
+  fc_def_empty_var moat370_reconnections
+
+  moat370_reconnections=$(do_calc "moat370_reconnections+1")
+
+  if [ ${moat370_reconnections} -gt ${moat370_max_retries} ]
+  then
+    exit_error "Maximum reconnection limit reached (${moat370_max_retries})."
+  else
+    [ ${moat370_reconnections} -ne 1 ] && echo_time "Reconnecting.. ${moat370_reconnections}/${moat370_max_retries}"
+  fi
+
+  fc_db_startup_connection
+  [ "${moat370_sw_db_type}" != "offline" ] && echo_time "Starting ${moat370_sw_db_type} in background. Connecting..."
+  fc_db_check_connection
+  [ "${moat370_sw_db_type}" != "offline" ] && echo_time "Connected."
+  fc_db_begin_code
+  [ "${moat370_sw_db_type}" != "offline" ] && echo_time "Loaded database startup code."
+  fc_check_database_variables
+}
+
+fc_replace_file_variable ()
+{
+  local v_in_file="$1"
+  local v_in_attr=$(ere_quote "$2")
+  local v_in_repl=$(ere_quote "$3")
+  local v_out_file="${v_in_file}.tmp"
+
+  sed "s|${v_in_attr}|${v_in_repl}|g" "${v_in_file}" > "${v_out_file}"
+
+  mv "${v_out_file}" "${v_in_file}"
 }
 
 #### END OF FILE ####

@@ -229,6 +229,9 @@ fc_exec_item ()
   fc_def_empty_var raw_spool_filename
   fc_def_empty_var csv_spool_filename
 
+  ## get time t0
+  get_time_t0=$(get_secs)
+
   if [ -n "${sql_text}" ]
   then
     if ${input_csv_mode}
@@ -285,6 +288,9 @@ fc_exec_item ()
       fi
     fi
   fi
+
+  ## get time t1
+  get_time_t1=$(get_secs)
 
   hh_mm_ss=$(get_time)
   fc_echo_screen_log ""
@@ -401,9 +407,6 @@ fc_proc_one_csv ()
   hh_mm_ss=$(get_time)
   fc_echo_screen_log "${hh_mm_ss} ${section_id} ${one_spool_filename}.csv"
 
-  ## get time t0
-  get_time_t0=$(get_secs)
-
   cat "${csv_spool_filename}" >> "${one_spool_fullpath_filename}"
 
   fc_convert_txt_to_html one_spool_fullpath_filename
@@ -414,9 +417,6 @@ fc_proc_one_csv ()
 
   ## update main report
   echo "<a href=\"${one_spool_filename}\">csv</a>" >> "${moat370_main_report}"
-
-  ## get time t1
-  get_time_t1=$(get_secs)
 
   total_hours="Topic execution time: $(convert_secs $(do_calc 'get_time_t1-get_time_t0'))."
 
@@ -461,9 +461,6 @@ fc_proc_one_text_file ()
   hh_mm_ss=$(get_time)
   fc_echo_screen_log "${hh_mm_ss} ${section_id} ${one_spool_filename}"
 
-  ## get time t0
-  get_time_t0=$(get_secs)
-
   ## Protect accidentally renaming files not in Output Folder.
   ## Check if one_spool_text_file is on Output Folder if renaming is enabled.
   one_spool_text_file_path=$($cmd_sed 's:/[^/]*$::g' <<< "${one_spool_text_file}")
@@ -501,9 +498,6 @@ fc_proc_one_text_file ()
 
   ## update main report
   echo "<a href=\"${one_spool_filename}\">${one_spool_text_file_type}</a>" >> "${moat370_main_report}"
-
-  ## get time t1
-  get_time_t1=$(get_secs)
 
   total_hours="Topic execution time: $(convert_secs $(do_calc 'get_time_t1-get_time_t0'))."
 
@@ -582,9 +576,6 @@ fc_html_topic_intro ()
   ## update main report
   echo "<a href=\"${in_param1}\">${in_param2}</a>" >> "${moat370_main_report}"
 
-  ## get time t0
-  get_time_t0=$(get_secs)
-
   ## header
   fc_paste_file_replacing_variables "${moat370_fdr_cfg}"/moat370_html_header.html "${one_spool_fullpath_filename}"
 
@@ -659,9 +650,6 @@ fc_html_topic_end ()
   rm -f "${one_spool_fullpath_filename}.tmp"
 
   echo "<!--END_SENSITIVE_DATA-->" >> "${one_spool_fullpath_filename}"
-
-  ## get time t1
-  get_time_t1=$(get_secs)
 
   total_hours="Topic execution time: $(convert_secs $(do_calc 'get_time_t1-get_time_t0'))."
 
