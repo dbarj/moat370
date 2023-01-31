@@ -17,6 +17,7 @@ COL is_ver_eq_12_2     NEW_V is_ver_eq_12_2     NOPRI
 COL is_ver_eq_12       NEW_V is_ver_eq_12       NOPRI
 COL is_ver_eq_18       NEW_V is_ver_eq_18       NOPRI
 COL is_ver_eq_19       NEW_V is_ver_eq_19       NOPRI
+COL is_ver_eq_19_7     NEW_V is_ver_eq_19_7     NOPRI
 COL is_ver_eq_19_10    NEW_V is_ver_eq_19_10    NOPRI
 COL is_ver_eq_19_11    NEW_V is_ver_eq_19_11    NOPRI
 COL is_ver_eq_21       NEW_V is_ver_eq_21       NOPRI
@@ -40,6 +41,7 @@ COL is_ver_le_12_2     NEW_V is_ver_le_12_2     NOPRI
 COL is_ver_le_12       NEW_V is_ver_le_12       NOPRI
 COL is_ver_le_18       NEW_V is_ver_le_18       NOPRI
 COL is_ver_le_19       NEW_V is_ver_le_19       NOPRI
+COL is_ver_le_19_7     NEW_V is_ver_le_19_7     NOPRI
 COL is_ver_le_19_10    NEW_V is_ver_le_19_10    NOPRI
 COL is_ver_le_19_11    NEW_V is_ver_le_19_11    NOPRI
 COL is_ver_le_21       NEW_V is_ver_le_21       NOPRI
@@ -63,6 +65,7 @@ COL is_ver_ge_12_2     NEW_V is_ver_ge_12_2     NOPRI
 COL is_ver_ge_12       NEW_V is_ver_ge_12       NOPRI
 COL is_ver_ge_18       NEW_V is_ver_ge_18       NOPRI
 COL is_ver_ge_19       NEW_V is_ver_ge_19       NOPRI
+COL is_ver_ge_19_7     NEW_V is_ver_ge_19_7     NOPRI
 COL is_ver_ge_19_10    NEW_V is_ver_ge_19_10    NOPRI
 COL is_ver_ge_19_11    NEW_V is_ver_ge_19_11    NOPRI
 COL is_ver_ge_21       NEW_V is_ver_ge_21       NOPRI
@@ -87,6 +90,7 @@ COL skip_ver_eq_12_2   NEW_V skip_ver_eq_12_2   NOPRI
 COL skip_ver_eq_12     NEW_V skip_ver_eq_12     NOPRI
 COL skip_ver_eq_18     NEW_V skip_ver_eq_18     NOPRI
 COL skip_ver_eq_19     NEW_V skip_ver_eq_19     NOPRI
+COL skip_ver_eq_19_7   NEW_V skip_ver_eq_19_7   NOPRI
 COL skip_ver_eq_19_10  NEW_V skip_ver_eq_19_10  NOPRI
 COL skip_ver_eq_19_11  NEW_V skip_ver_eq_19_11  NOPRI
 COL skip_ver_eq_21     NEW_V skip_ver_eq_21     NOPRI
@@ -110,6 +114,7 @@ COL skip_ver_le_12_2   NEW_V skip_ver_le_12_2   NOPRI
 COL skip_ver_le_12     NEW_V skip_ver_le_12     NOPRI
 COL skip_ver_le_18     NEW_V skip_ver_le_18     NOPRI
 COL skip_ver_le_19     NEW_V skip_ver_le_19     NOPRI
+COL skip_ver_le_19_7   NEW_V skip_ver_le_19_7   NOPRI
 COL skip_ver_le_19_10  NEW_V skip_ver_le_19_10  NOPRI
 COL skip_ver_le_19_11  NEW_V skip_ver_le_19_11  NOPRI
 COL skip_ver_le_21     NEW_V skip_ver_le_21     NOPRI
@@ -133,6 +138,7 @@ COL skip_ver_ge_12_2   NEW_V skip_ver_ge_12_2   NOPRI
 COL skip_ver_ge_12     NEW_V skip_ver_ge_12     NOPRI
 COL skip_ver_ge_18     NEW_V skip_ver_ge_18     NOPRI
 COL skip_ver_ge_19     NEW_V skip_ver_ge_19     NOPRI
+COL skip_ver_ge_19_7   NEW_V skip_ver_ge_19_7   NOPRI
 COL skip_ver_ge_19_10  NEW_V skip_ver_ge_19_10  NOPRI
 COL skip_ver_ge_19_11  NEW_V skip_ver_ge_19_11  NOPRI
 COL skip_ver_ge_21     NEW_V skip_ver_ge_21     NOPRI
@@ -165,6 +171,7 @@ select -- Equal
        case when version = 12                                      then 'Y' else 'N' end is_ver_eq_12,
        case when version = 18                                      then 'Y' else 'N' end is_ver_eq_18,
        case when version = 19                                      then 'Y' else 'N' end is_ver_eq_19,
+       case when version = 19 and release = 7                      then 'Y' else 'N' end is_ver_eq_19_7,
        case when version = 19 and release = 10                     then 'Y' else 'N' end is_ver_eq_19_10,
        case when version = 19 and release = 11                     then 'Y' else 'N' end is_ver_eq_19_11,
        case when version = 21                                      then 'Y' else 'N' end is_ver_eq_21,
@@ -195,6 +202,7 @@ select -- Equal
        case when version <= 12                                     then 'Y' else 'N' end is_ver_le_12,
        case when version <= 18                                     then 'Y' else 'N' end is_ver_le_18,
        case when version <= 19                                     then 'Y' else 'N' end is_ver_le_19,
+       case when version <  19 or (version = 19 and release <= 7)  then 'Y' else 'N' end is_ver_le_19_7,
        case when version <  19 or (version = 19 and release <= 10) then 'Y' else 'N' end is_ver_le_19_10,
        case when version <  19 or (version = 19 and release <= 11) then 'Y' else 'N' end is_ver_le_19_11,
        case when version <= 21                                     then 'Y' else 'N' end is_ver_le_21,
@@ -222,6 +230,7 @@ select -- Equal
        case when version >= 12                                     then 'Y' else 'N' end is_ver_ge_12,
        case when version >= 18                                     then 'Y' else 'N' end is_ver_ge_18,
        case when version >= 19                                     then 'Y' else 'N' end is_ver_ge_19,
+       case when version >  19 or (version = 19 and release >= 7)  then 'Y' else 'N' end is_ver_ge_19_7,
        case when version >  19 or (version = 19 and release >= 10) then 'Y' else 'N' end is_ver_ge_19_10,
        case when version >  19 or (version = 19 and release >= 11) then 'Y' else 'N' end is_ver_ge_19_11,
        case when version >= 21                                     then 'Y' else 'N' end is_ver_ge_21,
@@ -251,6 +260,7 @@ select -- Equal
        decode('&&is_ver_eq_12.'     ,'Y','--','N','') skip_ver_eq_12,
        decode('&&is_ver_eq_18.'     ,'Y','--','N','') skip_ver_eq_18,
        decode('&&is_ver_eq_19.'     ,'Y','--','N','') skip_ver_eq_19,
+       decode('&&is_ver_eq_19_7.'   ,'Y','--','N','') skip_ver_eq_19_7,
        decode('&&is_ver_eq_19_10.'  ,'Y','--','N','') skip_ver_eq_19_10,
        decode('&&is_ver_eq_19_11.'  ,'Y','--','N','') skip_ver_eq_19_11,
        decode('&&is_ver_eq_21.'     ,'Y','--','N','') skip_ver_eq_21,
@@ -274,6 +284,7 @@ select -- Equal
        decode('&&is_ver_le_12.'     ,'Y','--','N','') skip_ver_le_12,
        decode('&&is_ver_le_18.'     ,'Y','--','N','') skip_ver_le_18,
        decode('&&is_ver_le_19.'     ,'Y','--','N','') skip_ver_le_19,
+       decode('&&is_ver_le_19_7.'   ,'Y','--','N','') skip_ver_le_19_7,
        decode('&&is_ver_le_19_10.'  ,'Y','--','N','') skip_ver_le_19_10,
        decode('&&is_ver_le_19_11.'  ,'Y','--','N','') skip_ver_le_19_11,
        decode('&&is_ver_le_21.'     ,'Y','--','N','') skip_ver_le_21,
@@ -297,6 +308,7 @@ select -- Equal
        decode('&&is_ver_ge_12.'     ,'Y','--','N','') skip_ver_ge_12,
        decode('&&is_ver_ge_18.'     ,'Y','--','N','') skip_ver_ge_18,
        decode('&&is_ver_ge_19.'     ,'Y','--','N','') skip_ver_ge_19,
+       decode('&&is_ver_ge_19_7.'   ,'Y','--','N','') skip_ver_ge_19_7,
        decode('&&is_ver_ge_19_10.'  ,'Y','--','N','') skip_ver_ge_19_10,
        decode('&&is_ver_ge_19_11.'  ,'Y','--','N','') skip_ver_ge_19_11,
        decode('&&is_ver_ge_21.'     ,'Y','--','N','') skip_ver_ge_21,
@@ -321,6 +333,7 @@ COL is_ver_eq_12_2     CLEAR
 COL is_ver_eq_12       CLEAR
 COL is_ver_eq_18       CLEAR
 COL is_ver_eq_19       CLEAR
+COL is_ver_eq_19_7     CLEAR
 COL is_ver_eq_19_10    CLEAR
 COL is_ver_eq_19_11    CLEAR
 COL is_ver_eq_21       CLEAR
@@ -344,6 +357,7 @@ COL is_ver_le_12_2     CLEAR
 COL is_ver_le_12       CLEAR
 COL is_ver_le_18       CLEAR
 COL is_ver_le_19       CLEAR
+COL is_ver_le_19_7     CLEAR
 COL is_ver_le_19_10    CLEAR
 COL is_ver_le_19_11    CLEAR
 COL is_ver_le_21       CLEAR
@@ -367,6 +381,7 @@ COL is_ver_ge_12_2     CLEAR
 COL is_ver_ge_12       CLEAR
 COL is_ver_ge_18       CLEAR
 COL is_ver_ge_19       CLEAR
+COL is_ver_ge_19_7     CLEAR
 COL is_ver_ge_19_10    CLEAR
 COL is_ver_ge_19_11    CLEAR
 COL is_ver_ge_21       CLEAR
@@ -390,6 +405,7 @@ COL skip_ver_eq_12_2   CLEAR
 COL skip_ver_eq_12     CLEAR
 COL skip_ver_eq_18     CLEAR
 COL skip_ver_eq_19     CLEAR
+COL skip_ver_eq_19_7   CLEAR
 COL skip_ver_eq_19_10  CLEAR
 COL skip_ver_eq_19_11  CLEAR
 COL skip_ver_eq_21     CLEAR
@@ -413,6 +429,7 @@ COL skip_ver_le_12_2   CLEAR
 COL skip_ver_le_12     CLEAR
 COL skip_ver_le_18     CLEAR
 COL skip_ver_le_19     CLEAR
+COL skip_ver_le_19_7   CLEAR
 COL skip_ver_le_19_10  CLEAR
 COL skip_ver_le_19_11  CLEAR
 COL skip_ver_le_21     CLEAR
@@ -436,6 +453,7 @@ COL skip_ver_ge_12_2   CLEAR
 COL skip_ver_ge_12     CLEAR
 COL skip_ver_ge_18     CLEAR
 COL skip_ver_ge_19     CLEAR
+COL skip_ver_ge_19_7   CLEAR
 COL skip_ver_ge_19_10  CLEAR
 COL skip_ver_ge_19_11  CLEAR
 COL skip_ver_ge_21     CLEAR
