@@ -577,7 +577,11 @@ fi
 
 fc_zip_file "${moat370_zip_filename}" "${moat370_sw_output_fdr}/LICENSE-3RD-PARTY.txt"
 
-cp "${moat370_fdr_js}/style.css" "${moat370_sw_output_fdr}/${moat370_style_css}" >> "${moat370_log3}"
+if [ -r "${moat370_sw_folder}/cfg/style.css" ] && [ -s "${moat370_sw_folder}/cfg/style.css" ]; then
+  cp "${moat370_sw_folder}/cfg/style.css" "${moat370_sw_output_fdr}/${moat370_style_css}" >>"${moat370_log3}"
+else
+  cp "${moat370_fdr_js}/style.css" "${moat370_sw_output_fdr}/${moat370_style_css}" >>"${moat370_log3}"
+fi
 
 fc_zip_file "${moat370_zip_filename}" "${moat370_sw_output_fdr}/${moat370_style_css}"
 
